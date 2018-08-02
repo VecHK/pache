@@ -42,32 +42,34 @@ const generateGetters = obj => Object.assign({},
   }))
 )
 
+const extendProperties = {
+  middleWare(ctx, next) {
+    return next().then(() => {
+      console.log(ctx.body, ctx.status, typeof(ctx.status))
+
+      if ((!ctx.body) && (ctx.status === 404)) {
+        ctx.backNotFound()
+      }
+    }).catch(err => {
+      // console.error(err.code, err)
+      ctx.backError(err.message, err.statusCode || 500)
+    })
+  },
+
+  Error(message = 'internal error', statusCode = 500) {
+    return Object.assign(new Error(message), { statusCode })
+  },
+
+  throwError() {
+    throw this.Error(...arguments)
+  },
+}
+
 module.exports = function () {
   return Object.assign(function bindingContext(app) {
     Object.defineProperties(
       app.context,
       generateGetters(handles)
     )
-  }, {
-    middleWare(ctx, next) {
-      return next().then(() => {
-        console.log(ctx.body, ctx.status, typeof(ctx.status))
-
-        if ((!ctx.body) && (ctx.status === 404)) {
-          ctx.backNotFound()
-        }
-      }).catch(err => {
-        console.error(err.code, err)
-        ctx.backError(err.message, err.code || err.status || 500)
-      })
-    },
-
-    extendError(message = 'internal error', code = 500) {
-      return Object.assign(new Error(message), { code })
-    },
-
-    throwError() {
-      throw this.extendError(...arguments)
-    },
-  })
+  }, extendProperties)
 }

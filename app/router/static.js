@@ -5,6 +5,12 @@ const pache_static = require('../lib/pache-static')
 
 module.exports = function (app, envir) {
   app.use(pache_static({
+    path: path.join(root_dir, './app/page-dist/'),
+
+    enable_modified_cache: true,
+  }))
+
+  app.use(pache_static({
     path: path.join(root_dir, './app/static/'),
 
     enable_modified_cache: true,

@@ -14,6 +14,7 @@ module.exports = function (app) {
     './middleware/gzip',
     './middleware/views',
     './middleware/redirect-to-master-domain',
+    './api',
     './static'
   ].map(p => {
     require(p)(app, envir)
