@@ -5,7 +5,6 @@ const EventEmitter = require('events').EventEmitter
 
 module.exports = function () {
   if (cluster.isMaster) {
-    const appWatcher = require('./app-watcher')
     const envir = require('../envir')
     envir.printInfo()
 
@@ -30,12 +29,13 @@ module.exports = function () {
     let workers = []
     const stopWorkers = () => {
       workers.forEach(worker => {
-        worker.disconnect()
         worker.kill()
       })
       workers.length = 0
     }
-    const forkWorkersImmediate = () => {
+    const forkWorkers = () => {
+      stopWorkers()
+
       workers = CPUs.map(() => cluster.fork())
       envir.setEnvir(workers)
       workers.forEach(worker => {
@@ -44,21 +44,12 @@ module.exports = function () {
         })
       })
     }
-    const forkWorkers = () => {
-      setTimeout(() => {
-        forkWorkersImmediate()
-      }, 2000)
-    }
 
     forkWorkers()
 
-    appWatcher.watch({
-      preChange() {
-        stopWorkers()
-      },
-      change() {
-        forkWorkers()
-      },
+    require('./app-watcher').watch({
+      preChange: stopWorkers,
+      change: forkWorkers,
     })
   } else {
     require('./worker')

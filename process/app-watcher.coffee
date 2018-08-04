@@ -25,12 +25,12 @@ module.exports =
   watch: ({ preChange, change }) ->
     timeout = 0
     getWatch().on 'all', (event, path) ->
-      console.log 'detect app change, will change' if !timeout
+      console.log 'app change detected, will change' if !timeout
 
       preChange()
 
       clearTimeout timeout
       timeout = setTimeout () ->
         timeout = 0
-        change watch
+        change()
       , CHANGE_TIMEOUT
