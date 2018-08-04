@@ -1,10 +1,10 @@
 const Collect = require('collect-info')
 
 const SelectForm = new Collect([
-	{ name: 'answer',
-		prompt: '*** 注意，這是實驗性的功能，你確定要執行刷新命令嗎？（输入 "yes" 继续）',
-		type: String,
-	}
+  { name: 'answer',
+    prompt: '*** 注意，這是實驗性的功能，你確定要執行刷新命令嗎？（输入 "yes" 继续）',
+    type: String,
+  }
 ]);
 
 module.exports = async function () {

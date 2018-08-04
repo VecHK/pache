@@ -43,7 +43,7 @@ yargs
         envir.setConfigPath(sucPath)
         envir.reload()
 
-        require(`${root_dir}/app/master`)()
+        require(`${root_dir}/process/master`)()
       } catch (e) {
         console.error(e)
         throw e

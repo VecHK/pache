@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 if (require('cluster').isWorker) {
-  require('../app/worker')
+  require('../process/worker')
 } else {
   require('./pache')
 }

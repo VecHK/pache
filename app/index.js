@@ -1,3 +1,5 @@
+require('coffeescript/register')
+
 const Koa = require('koa')
 const router = require('./router')
 

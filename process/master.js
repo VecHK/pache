@@ -1,11 +1,14 @@
+require('coffeescript/register')
+
 const cluster = require('cluster')
+const EventEmitter = require('events').EventEmitter
 
 module.exports = function () {
   if (cluster.isMaster) {
+    const appWatcher = require('./app-watcher')
     const envir = require('../envir')
     envir.printInfo()
 
-    const EventEmitter = require('events').EventEmitter
     console.log(`\n------- 主线程启动 -------\n`)
 
     cluster.on('listening', (worker, address) => {
@@ -23,12 +26,39 @@ module.exports = function () {
     } else {
       var CPUs = require('os').cpus()
     }
-    const workers = CPUs.map(() => cluster.fork())
-    envir.setEnvir(workers)
-    workers.forEach(worker => {
-      worker.send({
-        type: 'web',
+
+    let workers = []
+    const stopWorkers = () => {
+      workers.forEach(worker => {
+        worker.disconnect()
+        worker.kill()
       })
+      workers.length = 0
+    }
+    const forkWorkersImmediate = () => {
+      workers = CPUs.map(() => cluster.fork())
+      envir.setEnvir(workers)
+      workers.forEach(worker => {
+        worker.send({
+          type: 'web',
+        })
+      })
+    }
+    const forkWorkers = () => {
+      setTimeout(() => {
+        forkWorkersImmediate()
+      }, 2000)
+    }
+
+    forkWorkers()
+
+    appWatcher.watch({
+      preChange() {
+        stopWorkers()
+      },
+      change() {
+        forkWorkers()
+      },
     })
   } else {
     require('./worker')

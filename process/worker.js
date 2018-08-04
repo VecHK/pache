@@ -1,3 +1,7 @@
+require('coffeescript/register')
+
+const root_dir = require('app-root-path').resolve
+
 const fs = require('fs')
 const https = require('https')
 const koa = require('koa')
@@ -11,7 +15,7 @@ process.on('message', (message) => {
     console.log(`worker[${cluster.worker.id}] Envir was set`)
   } else if (message.type === 'web') {
     const http = require('http')
-    let app = require('./')
+    let app = require(root_dir('./app'))
 
     if (envir.enable_https) {
       const credentials = {}
