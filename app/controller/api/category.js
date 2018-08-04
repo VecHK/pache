@@ -1,4 +1,4 @@
-const service = require('../service/category')
+const service = require('../../service/category')
 
 module.exports = new class {
   // 创建分类

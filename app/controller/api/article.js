@@ -1,4 +1,4 @@
-const service = require('../service/article')
+const service = require('../../service/article')
 
 module.exports = new class {
   // 创建文章

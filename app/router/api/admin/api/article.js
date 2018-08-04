@@ -1,6 +1,6 @@
 const root_dir = require('app-root-path').resolve
 
-const controller = require(root_dir('./app/controller/article'))
+const controller = require(root_dir('./app/controller/api/article'))
 const Router = require('koa-router')
 
 module.exports = function () {

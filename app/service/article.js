@@ -21,17 +21,21 @@ module.exports = new class {
     }).remove()
   }
 
+  _get(id) {
+    return Article.findOne({ _id: id })
+  }
+
   async get(id) {
     id = String(id)
-    const article = await Article.findOne({ _id: id })
+    const article = await this._get(id)
     if (!article) {
-      throw Object.assign(new Error('article not found'), { code: 404 })
+      throw Object.assign(new Error('article not found'), { statusCode: 404 })
     }
 
     return article
   }
 
-  /* 有標籤的文章搜索，無標籤的文章搜索 */
+  /* 有标签的文章搜索 & 无标签的文章搜索 */
   _applyTagsConditions(conditions) {
     if (Array.isArray(conditions.tags) && conditions.tags.length) {
       conditions.tags = { $all: conditions.tags };
