@@ -6,7 +6,7 @@ isObjectId = (require 'mongoose').Types.ObjectId.isValid
 
 draftArticle = require './draft-article'
 
-module.exports = new class
+module.exports = new class extends require('../../')
   get: (ctx, next) ->
     { id } = ctx.params
 
