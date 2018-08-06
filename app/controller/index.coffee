@@ -1,3 +1,5 @@
+# 控制器需要继承此类，方可实现实例方法绑定上下文
+
 module.exports = class Controller
   constructor ->
     new Proxy this,
