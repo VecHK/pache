@@ -15,7 +15,7 @@ module.exports = new class extends require('../../')
     article = await service._get(id)
 
     if !article
-      ctx.status = err.statusCode
+      ctx.status = 404
       await ctx.render 'article/notfound', {}, true
     else
       article = draftArticle(article) if article.is_draft
