@@ -1,16 +1,15 @@
+fs = require 'fs'
+
 root_dir = (require 'app-root-path').resolve
 
 CHANGE_TIMEOUT = 1500
 
-watch_dir = [
-  'app/controller'
-  'app/lib'
-  'app/model'
-  'app/page'
-  'app/router'
-  'app/service'
-  'app/index.js'
-].map (p) -> root_dir p
+exclude = /(^page-dist$)|(^static$)|(^views$)/
+
+watch_dir = (fs.readdirSync root_dir 'app')
+  .filter (path) ->
+    !exclude.test(path)
+  .map (p) -> root_dir "app/#{p}"
 
 watch_options =
   persistent: true
