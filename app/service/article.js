@@ -1,7 +1,9 @@
 const envir = require('../../envir')
 const { Article } = require('../model')
+const clone = require('../lib/clone')
+const isNum = require('is-number')
 
-module.exports = new class {
+class ArticleService {
   create(data) {
     delete data._id
     const article = new Article(data)
@@ -35,63 +37,60 @@ module.exports = new class {
     return article
   }
 
-  /* 有标签的文章搜索 & 无标签的文章搜索 */
-  _applyTagsConditions(conditions) {
-    if (Array.isArray(conditions.tags) && conditions.tags.length) {
-      conditions.tags = { $all: conditions.tags };
-    } else if (Array.isArray(conditions.tags)) {
-      conditions.tags = [];
-    } else {
-      delete conditions.tags
-    }
-    return this;
-  }
-
-  _applyCategoryConditions(conditions){
-    if (typeof(conditions.category) === 'string') {
-
-    } else {
-      delete conditions.category
-    }
-    return this;
-  }
-
-  count(conditions = {}){
-    this._applyTagsConditions(conditions)
-    this._applyCategoryConditions(conditions)
-
+  static count(conditions = {}) {
     return Article.find(conditions).count()
   }
 
-  list(page, conditions = {}, dateSort = -1){
-    let start = (page - 1) * envir.limit;
-    if (!Number.isInteger(page) || page < 1) {
-      let err = new Error('page must be Integer and greater or equal to 1');
-      err.status = 500;
-      return Promise.reject(err)
+  static async list(page, conditions = {}, dateSort = -1, limit = envir.limit) {
+    if (!isNum(page) || page < 1) {
+      throw Object.assign(
+        new Error('page must be Integer and greater or equal to 1'),
+        { statusCode: 400 }
+      )
     }
 
-    this._applyTagsConditions(conditions)
-    this._applyCategoryConditions(conditions)
+    let start = (page - 1) * limit
 
     return Article.find(conditions)
       .sort({date: dateSort})
       .skip(start)
-      .limit(envir.limit)
+      .limit(limit)
       .exec()
   }
 
-  async getList(opt = {}) {
-    const { page } = opt
-    const { conditions = {} } = opt
+  static categoryCondition(conditions, category) {
+    if (typeof category === 'string') {
+      conditions.category = category
+    }
+  }
 
-    const count = await this.count(conditions)
-    const list = await this.list(page, conditions)
+  static tagsCondition(conditions, tags) {
+    if (!Array.isArray(tags)) {
+      return
+    }
+
+    if (tags.length) {
+      conditions.tags = { $all: tags }
+    } else {
+      conditions.tags = []
+    }
+  }
+
+  async getList(opt = {}) {
+    const { limit } = envir
+    const conditions = {}
+    const { page, category, tags } = opt
+
+    ArticleService.categoryCondition(conditions, category)
+    ArticleService.tagsCondition(conditions, tags)
+
+    const count = await ArticleService.count(conditions)
+    const list = await ArticleService.list(page, conditions)
 
     return {
       page,
-      total_page: Math.ceil(count / envir.limit),
-      limit: envir.limit,
+      total_page: Math.ceil(count / limit),
+      limit,
       count,
       list,
     }
@@ -119,3 +118,5 @@ module.exports = new class {
     )
   }
 }
+
+module.exports = new ArticleService
