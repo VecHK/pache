@@ -1,5 +1,9 @@
 const path = require('path')
 
+function root(dir) {
+  return path.join(__dirname, dir)
+}
+
 const cssRule = {
   test: /\.css$/,
   use: [ 'style-loader', 'css-loader' ]
@@ -14,16 +18,25 @@ const lessRule = {
 }
 
 const entry = {
-  article: path.resolve(__dirname, 'app/page/article/index.js')
+  article: root('app/page/article/index.js')
 }
 
-const OUTPUT_PATH = path.resolve(__dirname, 'app/page-dist')
+const resolve = {
+  extensions: ['.js', '.json'],
+  alias: {
+    '@': root('app/page'),
+  }
+}
+
+const OUTPUT_PATH = root('app/page-dist')
 
 module.exports = [{
   // 非 polyfill
   mode: 'development',
 
   entry,
+
+  resolve,
 
   output: {
     path: OUTPUT_PATH,
@@ -39,6 +52,8 @@ module.exports = [{
   mode: 'development',
 
   entry,
+
+  resolve,
 
   output: {
     path: OUTPUT_PATH,
