@@ -58,9 +58,9 @@ class ArticleService {
       .exec()
   }
 
-  static categoryCondition(conditions, category) {
-    if (typeof category === 'string') {
-      conditions.category = category
+  static categoryIdCondition(conditions, category_id) {
+    if (typeof category_id === 'string') {
+      conditions.category = category_id
     }
   }
 
@@ -79,9 +79,9 @@ class ArticleService {
   async getList(opt = {}) {
     const { limit } = envir
     const conditions = {}
-    const { page, category, tags } = opt
+    const { page, category_id, tags } = opt
 
-    ArticleService.categoryCondition(conditions, category)
+    ArticleService.categoryIdCondition(conditions, category_id)
     ArticleService.tagsCondition(conditions, tags)
 
     const count = await ArticleService.count(conditions)
