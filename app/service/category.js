@@ -23,8 +23,17 @@ module.exports = new class extends require('./service') {
     return category
   }
 
-  getList() {
-    return Category.find().sort({ 'sort': 1 })
+  async _getByName(name) {
+    return Category.findOne({ name })
+  }
+
+  async getList() {
+    const categories = await Category.find().sort({ 'sort': 1 })
+    if (Array.isArray(categories)) {
+      return categories
+    } else {
+      return []
+    }
   }
 
   async update(id, data) {
