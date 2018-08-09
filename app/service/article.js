@@ -38,7 +38,7 @@ class ArticleService {
   }
 
   static count(conditions = {}) {
-    return Article.find(conditions).count()
+    return Article.find(conditions).countDocuments()
   }
 
   static async list(page, conditions = {}, dateSort = -1, limit = envir.limit) {
