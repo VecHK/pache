@@ -2,7 +2,7 @@ root_dir = (require 'app-root-path').resolve
 
 service = require root_dir 'app/service/article'
 
-isObjectId = (require 'mongoose').Types.ObjectId.isValid
+isObjectId = require root_dir 'app/lib/is-object-id'
 
 draftArticle = require './draft-article'
 
