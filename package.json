@@ -49,6 +49,7 @@
     "css-loader": "^1.0.0",
     "less": "^3.8.0",
     "less-loader": "^4.1.0",
+    "source-map-loader": "^0.2.3",
     "style-loader": "^0.21.0",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",

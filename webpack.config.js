@@ -34,6 +34,8 @@ module.exports = [{
   // 非 polyfill
   mode: 'development',
 
+  devtool: 'cheap-source-map',
+
   entry,
 
   resolve,
@@ -50,6 +52,8 @@ module.exports = [{
   // JS polyfill
   // 带上了 Promise、async function 等
   mode: 'development',
+
+  devtool: 'cheap-source-map',
 
   entry,
 
