@@ -20,6 +20,7 @@ const lessRule = {
 const entry = {
   article: root('app/page/article/index.js'),
   home: root('/app/page/home/index.js'),
+  error: root('/app/page/error/index.js'),
 }
 
 const resolve = {

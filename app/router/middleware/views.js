@@ -18,7 +18,7 @@ module.exports = function (app, envir) {
         error,
         npmPackage,
         envir: Object.assign({}, envir),
-      })
+      }, true)
     }
   })
 }
