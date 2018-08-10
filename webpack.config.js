@@ -18,13 +18,15 @@ const lessRule = {
 }
 
 const entry = {
-  article: root('app/page/article/index.js')
+  article: root('app/page/article/index.js'),
+  home: root('/app/page/home/index.js'),
 }
 
 const resolve = {
-  extensions: ['.js', '.json'],
+  extensions: ['.js', '.json', '.less', '.css'],
   alias: {
     '@': root('app/page'),
+    'style': root('app/page/style'),
   }
 }
 
