@@ -1,0 +1,17 @@
+.page-shadow {
+  z-index: 3000;
+  position: fixed;
+  left: -5%;
+  top: -32px;
+  width: ~"calc(110%)";
+  height: 32px;
+  box-shadow: 0px 0px 12px #999;
+}
+
+@media screen and (min-width: 800px) {
+  .page-shadow {
+    left: 6px;
+    top: -32px;
+    width: ~"calc(100% - 12px)";
+  }
+}

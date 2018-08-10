@@ -1,0 +1,81 @@
+@page-code-height: 1.6em;
+@list-space-height: 3em;
+
+@import "~style/base.less";
+@import "~style/page-shadow.less";
+
+@import "./tag-list";
+@import "./pagecode.less";
+@import "./conditions.less";
+@import "./color-arrow.less";
+
+.title {
+  display: inline-block;
+  position: relative;
+}
+
+.title a {
+  font-size: 1.75em;
+  font-family: @pache-title-link-font-family;
+  text-decoration: blink;
+  color: @pache-title-color;
+}
+
+body > .list {
+  > li {
+    &:first-child {
+      margin-top: 0;
+    }
+    &:last-child {
+      margin-bottom: 0;
+    }
+    margin: 2.5em 0;
+    text-align: center;
+  }
+
+  list-style: none;
+  list-style-type: none;
+  margin: auto;
+
+  padding: @list-space-height .5em calc(@list-space-height + @page-code-height);
+}
+
+.time-frame {
+  position: relative;
+
+  .flex-frame;
+  display: flex;
+  display: -webkit-flex;
+  width: 100%;
+  justify-content: center;
+}
+
+.time {
+  display: inline-block;
+  position: relative;
+
+  font-family: @pache-time-label-font-family;
+  color: @pache-time-label-color;
+}
+
+// 大于 800px 的设备
+@media screen and (min-width: 800px) {
+  .list {
+    width: ~"calc(18em * 2.5)";
+  }
+  .title a { font-size: 2.5em }
+  .time { font-size: medium }
+}
+
+// (360px 以上，但小于 800px)的设备
+@media screen and (max-width: 800px) and (min-width: 360px) {
+  body > .list {
+    padding: @list-space-height 1.5em calc(@list-space-height + @page-code-height);
+  }
+  .time { font-size: small }
+}
+
+// 360px 以下的设备
+@media screen and (max-width: 359px) {
+  .time { font-size: small }
+}

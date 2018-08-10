@@ -1,0 +1,33 @@
+
+.tag-list {
+  .flex-frame;
+  display: -webkit-flex;
+  display: flex;
+  flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+
+  padding: 0;
+  margin: 0;
+
+  > * {
+    margin-right: 1em;
+  }
+  > *:before {
+    content: '#';
+    color: #999;
+  }
+  > *:last-child {
+    margin-right: 0;
+  }
+  > * {
+    display: inline-block;
+    padding: 0;
+    // margin: 0 .25em 0;
+    font-size: .8em;
+  }
+
+  a:visited, a:hover, a:active, a {
+    color: #999;
+    text-decoration: none;
+  }
+}
