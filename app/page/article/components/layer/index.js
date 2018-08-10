@@ -1,3 +1,5 @@
+import "./style.less"
+
 /*
   优秀的功能
   不使用 EventLite ，换成 async-call，因为需要异步事件机制

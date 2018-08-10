@@ -1,3 +1,5 @@
+import './page-control.less'
+
 import ClassConstruct from '@/utils/class-construct'
 import EventLite from '@/utils/event-lite'
 import timeout from '@/utils/timeout'

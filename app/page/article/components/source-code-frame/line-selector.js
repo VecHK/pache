@@ -1,5 +1,11 @@
+import Clipboard from 'clipboard'
+
 import EventLite from '@/utils/event-lite'
-import { ArrayForEach, copyArray } from '@/utils/wheel'
+import {
+  copyArray,
+  ArrayForEach,
+  fetchElementText
+} from '@/utils/wheel'
 
 class LineSelectorConstructor {
   /**

@@ -1,11 +1,12 @@
+import './style.less'
+
 import ClassConstruct from '@/utils/class-construct'
 import wait_step from '@/utils/wait-step'
 
 import PageControl from '../page/page-control'
 import Scroller from './scroller'
 
-import { getScrollingElement } from '@/utils/wheel'
-
+import { getScrollingElement, getTransitionDuration } from '@/utils/wheel'
 
 class Constructor extends ClassConstruct() {
   init(container, page) {

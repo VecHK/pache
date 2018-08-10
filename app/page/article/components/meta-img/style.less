@@ -1,0 +1,330 @@
+@import "~style/base.less";
+
+[id^="meta-"][width-short] {
+  width: min-content !important;
+}
+
+[id^="meta-"][meta-long] {
+  // overflow-y: scroll;
+
+  aside {
+    // display: inline-flex !important;
+    // z-index: 2;
+    // cursor: pointer;
+    overflow: hidden;
+  }
+
+  // .img-container:before {
+  //   content: " ";
+  //   position: absolute;
+  //   height: 100%;
+  //   width: 100%;
+  //   background: red;
+  //   opacity: .1;
+  //   z-index: 999;
+  //   overflow: hidden;
+  // }
+  .img-container::-webkit-scrollbar {
+    width: 0px;
+  }
+  .img-container {
+    overflow-y: scroll;
+    // -webkit-overflow-scrolling: touch;
+
+    img[meta-source] {
+      // position: absolute;
+      // top: 0;
+      // left: 0;
+      // opacity: .5;
+      width: 100%;
+      height: auto;
+    }
+  }
+}
+
+[id^="meta-"] {
+  // overflow: hidden;
+  // .flex-frame;
+  // display: flex;
+  // display: -webkit-flex;
+  // overflow: hidden;
+  display: block;
+  margin: auto;
+  box-shadow: 0px 0px 4px #bbb;
+
+  position: relative;
+  transition: box-shadow 618ms, height 618ms;
+  -webkit-tap-highlight-color: transparent;
+
+  .img-container {
+    // position: absolute;
+    // top: 0;
+    // left: 0;
+    height: 100%;
+    width: 100%;
+
+    // -webkit-filter: blur(1cm);
+    // transition: -webkit-filter 1000ms;
+
+    img[meta-source] {
+      display: block;
+      transition: opacity 618ms;
+      width: 100%;
+      height: 100%;
+      cursor: help;
+    }
+  }
+
+  aside {
+    .flex-frame;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+
+    z-index: 999;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+
+    cursor: help;
+
+
+    transition: opacity 618ms;
+
+    // @supports (-webkit-backdrop-filter: blur(8px)) or (backdrop-filter: blur(8px)) {
+    //   -webkit-backdrop-filter: blur(8px);
+    //   backdrop-filter: blur(8px);
+    // }
+    background: rgba(255, 255, 255, .85);
+
+    .meta-info {
+      display: flex;
+      align-content: center;
+      align-items: center;
+
+      transition: opacity 618ms;
+      -webkit-tap-highlight-color: transparent;
+
+      @-webkit-keyframes longfadein {
+        from {
+          opacity: 0;
+          transform: translateY(-.5em);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0em);
+        }
+      }
+      @keyframes longfadein {
+        from {
+          opacity: 0;
+          transform: translateY(-.5em);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0em);
+        }
+      }
+      .long.long-fade-in {
+        animation: longfadein 618ms;
+        animation-fill-mode: both;
+      }
+      .long {
+        display: none;
+        position: absolute;
+        top: 0;
+        right: 0;
+
+        color: #667788;
+        font-family: Arial;
+        font-size: 3em;
+
+        padding: .5em 0;
+
+        -webkit-writing-mode: vertical-lr;
+
+        transition: top 618ms;
+      }
+      .type {
+        font-size: 3em;
+        font-family: consolas, Arial;
+        color: rgb(102, 119, 136);
+      }
+      .dimension {
+        // width: 80px;
+        padding-left: .382em;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .dimension > div {
+        position: relative;
+        font-family: ISOCPEUR, "Calibri Light", "Arial Narrow", Arial, sans-serif;
+        font-size: .8em;
+        // line-height: 1em;
+        color: dimgrey;
+      }
+
+      .size {
+        @-webkit-keyframes newsize {
+          from {
+            opacity: 0;
+            left: -1em;
+          }
+          to {
+            opacity: 1;
+            left: 0em;
+          }
+        }
+        @keyframes newsize {
+          from {
+            opacity: 0;
+            left: -1em;
+          }
+          to {
+            opacity: 1;
+            left: 0em;
+          }
+        }
+        &.new-size {
+          position: absolute;
+          top: 0;
+
+          animation: newsize .618s;
+          animation-fill-mode: both;
+        }
+
+        @-webkit-keyframes oldsize {
+          from {
+            opacity: 1;
+            transform: translateX(0em);
+          }
+          to {
+            opacity: 0;
+            transform: translateX(1em);
+          }
+        }
+        @keyframes oldsize {
+          from {
+            opacity: 1;
+            transform: translateX(0em);
+          }
+          to {
+            opacity: 0;
+            transform: translateX(1em);
+          }
+        }
+
+        &.old-size {
+          animation: oldsize .618s;
+          animation-fill-mode: both;
+        }
+      }
+
+      hr {
+        width: ~"calc(100% + (.382em / .8))";
+        height: 1px;
+        margin: 0;
+      }
+      .long-line {
+        position: absolute;
+        // top: calc(-787.5px / 2);
+        // height: 787.5px;
+        top: 0px;
+        height: 0px;
+        width: 1px;
+        background: #cccccc;
+        right: calc(-.382em / .8);
+      }
+    }
+
+
+  }
+
+  // .float {
+  //   position: absolute;
+  //   left: 102%;
+  //   top: 0;
+  //   opacity: 0;
+  //   transition: opacity 382ms, left 382ms;
+  //   padding: .5em 1em 1em 0;
+  //
+  //   .type {
+  //     font-size: 1.5em;
+  //     font-family: Arial;
+  //     color: rgb(102, 119, 136);
+  //   }
+  //   .pixel, .size {
+  //     font-family: ISOCPEUR, "Calibri Light", "Arial Narrow", Arial, sans-serif;
+  //     font-size: .8em;
+  //     line-height: 1em;
+  //     color: dimgrey;
+  //   }
+  // }
+}
+
+.page, .article {
+  img + figcaption {
+    font-size: .8em;
+    color: grey;
+    text-align: center;
+  }
+}
+
+@media print {
+  [id^="meta-"] {
+    // max-height: 100vh;
+  }
+}
+
+// 大于 800px 的设备
+@media screen and (min-width: 800px) {
+  [id^="meta-"][meta-long] {
+    width: 350px;
+  }
+  [id^="meta-"] {
+    // max-height: 80vh;
+  }
+}
+
+// iPad
+@media screen and (max-width: 800px) and (min-width: 600px) {
+	[id^="meta-"][meta-long] {
+    width: 400px;
+
+    aside {
+      .meta-info {
+        .pixel, .size {
+          padding-left: .382em;
+        }
+        .line {
+          width: ~"calc(100% + 25px)";
+        }
+      }
+    }
+  }
+}
+
+// 360px 以下的设备
+@media screen and (max-width: 359px) {
+  [id^="meta-"][meta-long] {
+    width: 100%;
+
+    aside {
+      .meta-info {
+        .long {
+          font-size: 2.5em;
+        }
+        .type {
+          font-size: 2.5em;
+        }
+      }
+    }
+  }
+
+	.info, .page {
+		font-size: 1em;
+	}
+  // [id^="meta-"] { max-height: 320px }
+}

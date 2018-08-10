@@ -1,0 +1,237 @@
+@import "~style/base.less";
+@import "style-source-code-pro.less";
+// @import "hightlight-colors.less";
+
+.source-code {
+  display: flex;
+  justify-content: flex-start;
+  position: relative;
+  // overflow: auto;
+
+  .inline:empty:before {
+    content: " "
+  }
+  .inline, .inline * {
+    height: 1.2em;
+    line-height: 1.2em;
+  }
+  .inline {
+    &:nth-child(2n) {
+      background: rgba(214, 225, 231, .2);
+    }
+    display: block;
+    // width: 100%;
+    padding-left: .25em;
+    box-sizing: border-box;
+    overflow: hidden;
+    height: 1.3em;
+    line-height: 1.3em;
+
+    border-top: solid 1px transparent;
+    border-bottom: solid 1px transparent;
+    // box-sizing: border-box;
+    transition: background-color 382ms, border-top-color 382ms;
+    &:hover {
+      // background: hsla(201, 50%, 50%, 0.1)
+    }
+  }
+
+  .codeline-frame {
+    position: relative;
+    text-align: right;
+    color: #AAA;
+    min-width: 3em;
+    border-left: 2px solid rgb(48, 103, 133);
+    background: rgb(248, 248, 248);
+
+    .linecode.selected {
+      // border-color: rgb(207, 152, 152);
+      border-right: solid 2px hsl(201, 47%, 35%);
+      // color: hsla(0, 36%, 50%, 1);
+      color: hsl(201, 47%, 35%);
+
+      // background: hsla(0, 6%, 90%, 1);
+      background: hsl(201, 47%, 85%);
+    }
+    .linecode {
+      padding-right: .25em;
+      padding-top: 1px;
+      // border-top: 1px solid transparent;
+      padding-bottom: 1px;
+      border-right: 1px solid #AAA;
+      background: rgb(248, 248, 248);
+      color: hsla(0, 0%, 55%, 1);
+      cursor: copy;
+      // box-sizing: border-box;
+
+      transition-property: background, color, border-right, border-top-color;
+      transition-duration: 382ms;
+    }
+  }
+  .codeline-frame > .linecode {
+    // font-size: 0.8em;
+    box-sizing: border-box;
+    line-height: 1.3em;
+    height: 1.3em;
+    font-size: 1em;
+  }
+  .linecode, & > code {
+    font-family: "Source code Pro", "Courier New", Consolas, "Noto Sans CJK SC", "Source Han Sans CN", "Microsoft JhengHei", DengXian, "微软雅黑", "黑体" !important;
+  }
+  code > .copy {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    // width: 100%;
+    height: 0px;
+    // transition: height 382ms, top 618ms;
+    // opacity: 0.5;
+    background: transparent;
+    border: none;
+    outline: none;
+    // background: rgba(48, 103, 133, 0.5);
+
+    // transform: translate3d(0, 0, 0);
+  }
+}
+
+.mouse-copy.positing {
+  @transition-value: -webkit-filter 500ms, opacity 382ms, top 382ms, left 182ms;
+
+  transition: @transition-value;
+}
+.mouse-copy.is-show {
+  // opacity: 1;
+  filter: blur(0px);
+  -webkit-filter: blur(0px);
+}
+.mouse-copy {
+  .flex-frame();
+  transform: translate3d(0, 0, 0);
+  cursor: pointer;
+  position: absolute;
+  top: 1em;
+  left: 2em;
+
+  // padding: .25em .5em;
+  background: white;
+  border: 1px solid gainsboro;
+  border-radius: 999px;
+  box-shadow: 0px 1px 1px #999;
+  color: #777;
+  font-size: 1em;
+
+  width: 36px;
+  height: 36px;
+
+  outline: none;
+
+  opacity: 0;
+  filter: blur(4px);
+  -webkit-filter: blur(4px);
+  transition: opacity 500ms, filter 500ms, -webkit-filter 500ms;
+
+  .copy-icon {
+    height: 18px;
+    width: 14px;
+    position: relative;
+  }
+  .copy-icon > .front, .copy-icon > .back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+
+    border-radius: 2px;
+    border: 2px solid hsl(202, 20%, 63%);
+    box-sizing: border-box;
+    background: white;
+  }
+
+  &:hover > .copy-icon > .front {
+    border-top-right-radius: 8px;
+  }
+
+  .copy-icon > .front {
+    transform: translate(-2px, 2px);
+    transition: border-top-right-radius 382ms;
+  }
+  .copy-icon > .back {
+    transform: translate(2px, -2px);
+  }
+}
+
+.hljs code {
+  position: relative;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  background: transparent;
+  padding: 0;
+  color: hsla(201, 87%, 15%, 1);
+
+  .hljs-keyword {
+    color: lighten(darken(rgb(39, 54, 70), 15%), 40%);
+    // color: rgba(52, 0, 107, 0.84);//hsla(269, 100%, 21%, 0.61);
+  }
+
+  .hljs-class {
+    .hljs-keyword {
+      font-weight: bold;
+      color: hsla(340, 47%, 35%, 1);
+      font-family: consolas, courier;
+    }
+  }
+  .hljs-function {
+    .hljs-keyword {
+      font-weight: bold;
+      color: @torzo-blue;
+      font-family: consolas, courier;
+    }
+  }
+  .hljs-title {
+    color: slategrey;
+  }
+
+  .hljs-built_in {
+    color: hsla(210, 16%, 50%, 1);
+    font-weight: 800;
+  }
+  .hljs-attr {
+    color: @torzo-blue;
+  }
+}
+.hljs-comment,.hljs-quote {
+  color:#655f6d
+}
+.hljs-variable,.hljs-template-variable,.hljs-attribute,.hljs-tag,.hljs-name,.hljs-regexp,.hljs-link,.hljs-name,.hljs-name,.hljs-selector-id,.hljs-selector-class {
+  color:#be4678
+}
+.hljs-number,.hljs-meta,.hljs-built_in,.hljs-builtin-name,.hljs-literal,.hljs-type,.hljs-params {
+  color:#aa573c
+}
+.hljs-string,.hljs-symbol,.hljs-bullet {
+  color:#2a9292
+}
+.hljs-title,.hljs-section {
+  color:#576ddb
+}
+.hljs-keyword,.hljs-selector-tag {
+  color: #955ae7
+}
+.hljs-deletion,.hljs-addition {
+  color:#19171c;
+  display:inline-block;
+  width:100%
+}
+.hljs-deletion {
+  background-color:#be4678
+}
+.hljs-addition {
+  background-color:#2a9292
+}
+.hljs-emphasis {
+  font-style:italic
+}
+.hljs-strong {
+  font-weight:bold
+}

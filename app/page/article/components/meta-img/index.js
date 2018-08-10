@@ -1,3 +1,5 @@
+import './style.less'
+
 import timeout from '@/utils/timeout'
 import EventLite from '@/utils/event-lite'
 import NetStatus from '@/utils/net-status'

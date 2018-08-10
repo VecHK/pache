@@ -1,8 +1,12 @@
+import './style-highlight.less'
+
 import {
   ArrayForEach,
   getScrollingElement,
-  getElementPageY
+  getElementPageY,
+  fetchElementText
 } from '@/utils/wheel'
+import timeout from '@/utils/timeout'
 
 import SourceCodeCopyButton from './source-code-copy-button'
 import LineSelector from './line-selector'
@@ -283,7 +287,7 @@ class SourceCode {
           this.copyButton.setLeft()
           this.copyButton.positing()
 
-          waitting(182).then(res => {
+          timeout(182).then(res => {
             isTouch || this.slideCopyButton(true)
           })
         }

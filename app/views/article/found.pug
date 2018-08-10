@@ -1,0 +1,82 @@
+doctype html
+html
+	head
+		meta(name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no")
+		meta(http-equiv="content-type" content="text/html" charset="utf-8")
+		meta(http-equiv="X-UA-Compatible" content="IE=edge;chrome=1;")
+		meta(name="HandheldFriendly" content="true")
+
+		include ../include/app-icon
+		title=article.title
+
+		//- link(rel="stylesheet" media="all" href="/han/han.css")
+		//- link(rel="stylesheet" href="/style/article.css")
+		script(src="./index.js")
+
+		each appendString in article.headAppend
+			!=appendString
+
+	body
+		div#main
+			div(class="top-block")
+				div(class="page-control")
+					button.previous()=""
+					a.main-button.page-btn(href="/")="首頁"
+					button.next()=""
+
+				div(class="article-details")
+					div(class="title")=article.title
+					time=article.date.toLocaleDateString()
+
+			script(class="execable").
+				var cssStyle = document.createElement('style')
+				cssStyle.classList.add('execable-css')
+				cssStyle.innerHTML = '#article > .page:not(.current-page) { position: fiexed; visibility: hidden } #article section.footnotes { display: none }'
+				document.body.appendChild(cssStyle)
+
+			noscript
+				style.
+					[id^="meta-"] { box-shadow: 0px 0px 0px transparent !important }
+					[id^="meta-"] aside { display: none }
+					.page-selector {
+						display: none !important;
+					}
+
+			article(id="article" class="article")
+				!=article.format
+
+			div(class="page-selector-bg page-selector-disable")
+			div(class="page-selector page-selector-disable")
+				div(class="page-selector-frame page-control")
+					button.previous()
+					div(class="page-selector-content main-button disable-main-button")
+						div(class="selector-triangle")
+						ul(class="page-selector-list")
+					button.next()
+
+		//- 判断是否有第二页
+		script.
+			if (document.querySelectorAll('#article .page').length > 1) {
+				var pageSelectorDisable = document.querySelectorAll('.page-selector-disable')
+
+				for (var cursor = 0; cursor < pageSelectorDisable.length; cursor++) {
+					pageSelectorDisable[cursor].className = pageSelectorDisable[cursor].className.replace('page-selector-disable')
+				}
+			}
+
+		//- div(class="page-shadow")
+		//- script(src="/han/han.min.js")
+		//- script(src="/vools.js")
+		//- script(src="/requirejs/require.min.js")
+
+		//- script(src="/script/article-enter.js")
+		script.
+			window.pageloaded && window.pageloaded()
+			try {
+				var titleHan = Han(document.querySelector('.title')).render();
+			} catch (e) {}
+
+		style.
+			section.footnotes {
+				display: block
+			}
