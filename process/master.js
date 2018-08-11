@@ -3,6 +3,8 @@ require('coffeescript/register')
 const cluster = require('cluster')
 const EventEmitter = require('events').EventEmitter
 
+const out = require('../screen-output')
+
 module.exports = function () {
   if (cluster.isMaster) {
     const envir = require('../envir')
@@ -10,20 +12,22 @@ module.exports = function () {
 
     console.log(`\n------- 主线程启动 -------\n`)
 
+    const workerInfo = w => `(wid: ${w.id} pid: ${w.process.pid})`
+
     cluster.on('listening', (worker, address) => {
-      console.log(`端口已应用: wid[${worker.id}], pid[${worker.process.pid}], address[${address.address}:${address.port}]`)
+      out.info(`worker standy. ${workerInfo(worker)}`)
     })
 
     cluster.on('online', (worker) => {
-      console.log(`线程[${worker.id}]已在线`)
+      out.info(`worker online. ${workerInfo(worker)}`)
     })
 
     cluster.on('disconnect', (worker, code, signal) => {
-      console.log(`线程${worker.process.pid}已离线`)
+      out.warn(`worker disconnect. ${workerInfo(worker)}`)
     })
 
     cluster.on('exit', (worker, code, signal) => {
-      console.log(`线程${worker.process.pid}已退出`)
+      out.error(`worker exit ${workerInfo(worker)}`)
     })
 
     if (envir.cluster_fork_num) {

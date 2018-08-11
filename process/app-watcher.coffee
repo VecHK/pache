@@ -1,6 +1,8 @@
+root_dir = (require 'app-root-path').resolve
+
 fs = require 'fs'
 
-root_dir = (require 'app-root-path').resolve
+out = require root_dir 'screen-output'
 
 CHANGE_TIMEOUT = 1500
 
@@ -24,7 +26,7 @@ module.exports =
   watch: ({ preChange, change }) ->
     timeout = 0
     getWatch().on 'all', ->
-      console.log 'app change detected, will change' if !timeout
+      out.tips 'app change detected, will change' if !timeout
 
       preChange()
 
