@@ -31,5 +31,13 @@ module.exports = function () {
     ctx.back((delete ctx.session.is_login) && (delete ctx.session.random))
   })
 
+  router.all('/*', async (ctx, next) => {
+    if (ctx.session.is_login) {
+      return next()
+    } else {
+      return ctx.back('需要登录', 401)
+    }
+  })
+
   return router
 }
