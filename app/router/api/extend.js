@@ -1,3 +1,6 @@
+const root_dir = require('app-root-path').resolve
+const out = require(root_dir('./screen-output'))
+
 const handles = {
   // `this` is middleware context(ctx)
   back(data = null, code = 200) {
@@ -5,7 +8,9 @@ const handles = {
     this.type = 'json'
 
     this.status = code
-    this.body = JSON.stringify(data)
+    this.body = {
+      data
+    }
 
     return this
   },
@@ -15,23 +20,27 @@ const handles = {
   },
 
   backBadRequest(message = 'bad request') {
-    return this.back(message, 400)
+    return this.backFailMessage(message, 400)
   },
 
   backNotFound(message = 'not found') {
-    return this.back(message, 404)
+    return this.backFailMessage(message, 404)
   },
 
   backConflict(message = 'resource conflict') {
-    return this.back(message, 409)
+    return this.backFailMessage(message, 409)
   },
 
   backGone(message = 'resource was delete') {
-    return this.back(message, 410)
+    return this.backFailMessage(message, 410)
   },
 
   backError(message, code = 500) {
-    return this.back(message, code)
+    return this.backFailMessage(message, code)
+  },
+
+  backFailMessage(message, code = 500) {
+    this.back({ message }, code)
   },
 }
 const generateGetters = obj => Object.assign({},
@@ -51,7 +60,7 @@ const extendProperties = {
         ctx.backNotFound()
       }
     }).catch(err => {
-      // console.error(err.code, err)
+      out.error(`API got an Error: ${err.message} (code: ${err.code})\n ${err.stack}`)
       ctx.backError(err.message, err.statusCode || 500)
     })
   },
