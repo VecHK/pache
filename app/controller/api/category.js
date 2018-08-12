@@ -11,7 +11,7 @@ module.exports = new class {
   async destroy(ctx) {
     const { id } = ctx.params
 
-    ctx.backGone(await service.destroy(id))
+    ctx.back(await service.destroy(id))
   }
 
   // 获取分类列表
