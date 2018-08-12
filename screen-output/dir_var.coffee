@@ -9,7 +9,7 @@ print = (str, stream = process.stdout) ->
 default_options = Object.freeze
   indent: 2
 
-palette=
+palette =
   undefined: 'fuchsia'
   null: 'chocolate'
   nan: 'aqua'
