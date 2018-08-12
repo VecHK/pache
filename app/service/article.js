@@ -3,7 +3,7 @@ const { Article } = require('../model')
 const clone = require('../lib/clone')
 const isNum = require('is-number')
 
-class ArticleService {
+class ArticleService extends require('./service') {
   create(data) {
     delete data._id
     const article = new Article(data)

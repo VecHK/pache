@@ -39,10 +39,12 @@ module.exports = new class extends require('./service') {
   async update(id, data) {
     const category = await this.get(id)
 
-    if (category.name !== data.name) {
-      const check_category = await Category.findOne({ name: category.name })
-      if (check_category) {
-        throw this.Error('duplicate category name', 409)
+    if (data.hasOwnProperty('name')) {
+      if (category.name !== data.name) {
+        const check_category = await Category.findOne({ name: category.name })
+        if (check_category) {
+          throw this.Error('duplicate category name', 409)
+        }
       }
     }
 
