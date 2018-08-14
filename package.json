@@ -9,7 +9,7 @@
   "scripts": {
     "page-generate": "webpack --config webpack.config.js",
     "page-watch": "webpack --config webpack.config.js --watch",
-    "test": "ava ./test",
+    "test": "ava ./test --verbose",
     "test-watch": "ava ./test --watch"
   },
   "keywords": [
