@@ -15,7 +15,7 @@ module.exports = function () {
     const workerInfo = w => `(wid: ${w.id} pid: ${w.process.pid})`
 
     cluster.on('listening', (worker, address) => {
-      out.info(`worker standy. ${workerInfo(worker)}`)
+      out.info(`worker standby. ${workerInfo(worker)}`)
     })
 
     cluster.on('online', (worker) => {
