@@ -54,8 +54,6 @@ const generateGetters = obj => Object.assign({},
 const extendProperties = {
   middleWare(ctx, next) {
     return next().then(() => {
-      console.log(ctx.body, ctx.status, typeof(ctx.status))
-
       if ((!ctx.body) && (ctx.status === 404)) {
         ctx.backNotFound()
       }
