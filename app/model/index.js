@@ -7,7 +7,11 @@ module.exports = model
 
 Object.assign(model, {
   Category: require('./category') && mongoose.model('Category'),
+
   Article: require('./article') && mongoose.model('Article'),
+
+  Publish: require('./publish') && mongoose.model('Publish'),
+
   async connect() {
     try {
       const result = await mongoose.connect(envir.db, {
@@ -17,8 +21,7 @@ Object.assign(model, {
       model.removeCollection = mongoose.connection.db.dropCollection.bind(mongoose.connection.db)
       return result
     } catch (err) {
-      console.error(err)
-      console.warn('數據庫連接似乎出現了問題')
+      console.error('数据库连接似乎出现了问题', err)
       process.exit(-1)
     }
   },
