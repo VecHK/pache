@@ -11,32 +11,58 @@ PublishSchema = new Schema
 
   # 文章状态
   status:
-    type:
-      enum: [
-        'disable'     # 被禁用，访问文章页时应该返回一个 403/451
-        'need_pass'   # 需要密码，`pass` 字段即密码（非明文保存
-        'coming_soon' # 定时文章发布功能用，`release_date` 字段即发布的日期
-        'normal'      # 通常
-      ]
     disable_describe:
       type: Number
       enum: [ 403, 451 ]
     pass: String
     release_date: Date
+    type:
+      enum: [
+        'hidden'      # 隐藏，访问文章页时返回 404
+        'disable'     # 被禁用，访问文章页时应该返回一个 403/451
+        'need_pass'   # 需要密码，`pass` 字段即密码（非明文保存
+        'coming_soon' # 定时文章发布功能用，`release_date` 字段即发布的日期
+        'normal'      # 通常
+      ]
 
   # 发布日期，ISO 格式
   date:
     type: Date
     default: Date.now
 
+  # 转载相关字段
+  repost:
+    title:
+      required: true
+      type: String
+    link:
+      type: String
+      default: ''
+
+  is_draft:
+    type: Boolean
+    default: false
+
   article:
     required: true
     type: ObjectId
     ref: 'record'
 
+  output:
+    required: true
+    type: Object
+
+  tags:
+    type: Array
+    default: []
+
   category:
     default: null
     type: ObjectId
     ref: 'category'
+
+  fusion_color:
+    type: String
+    default: '#CCC'
 
 mongoose.model 'Publish', PublishSchema
