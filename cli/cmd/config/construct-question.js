@@ -6,7 +6,7 @@ const createQuestion = (name, type, assign = {}) => ({
 })
 
 const default_question = {
-  db: 'mongodb://127.0.0.1:27017/pache',
+  db: 'mongodb://127.0.0.1:27017/pache3',
   // pass: "",
   port: 80,
   session_secret: 'the_pache_session_secret',
