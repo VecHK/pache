@@ -1,6 +1,6 @@
 const service = require('../../service/category')
 
-module.exports = new class {
+module.exports = new class CategoryController {
   // 创建分类
   async create(ctx) {
     const { body } = ctx.request

@@ -1,6 +1,6 @@
 const service = require('../../service/article')
 
-module.exports = new class {
+module.exports = new class ArticleController {
   // 创建文章
   async create(ctx) {
     const { body } = ctx.request
