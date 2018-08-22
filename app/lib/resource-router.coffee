@@ -5,7 +5,11 @@ detectControllerMethod = (controller, method_name) ->
     else
       next()
 
-module.exports = (router, path, controller) ->
+module.exports = (router, path, ...middlewares) ->
+  throw Error 'need a Controller' unless middlewares.length
+
+  controller = middlewares.pop()
+
   detectController = (method_name) =>
     detectControllerMethod controller, method_name
 
@@ -13,7 +17,7 @@ module.exports = (router, path, controller) ->
     path = path.substr 0, path.length - 1
 
   router
-    .get "#{path}/:id", detectController 'get'
-    .post "#{path}", detectController 'destroy'
-    .patch "#{path}/:id", detectController 'update'
-    .delete "#{path}/:id", detectController 'destroy'
+    .get "#{path}/:id", ...middlewares, detectController 'get'
+    .post "#{path}", ...middlewares, detectController 'destroy'
+    .patch "#{path}/:id", ...middlewares, detectController 'update'
+    .delete "#{path}/:id", ...middlewares, detectController 'destroy'
