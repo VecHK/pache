@@ -10,7 +10,7 @@ class PublishService extends require './service'
     publish = await this.get id
     publish.remove()
 
-  _get: _id => Publish.findOne { _id }
+  _get: (_id) => Publish.findOne { _id }
 
   get: (id) ->
     id = String id
