@@ -17,11 +17,11 @@ module.exports = function (app, envir) {
   router.use('/api', extend.middleWare)
 
   // 登录
-  const authRouter = require('./admin/auth')()
+  const authRouter = require('./auth')()
   router.use('/api', authRouter.routes(), authRouter.allowedMethods())
 
   // API
-  const adminApiRouter = require('./admin/api')()
+  const adminApiRouter = require('./admin')()
   router.use('/api', adminApiRouter.routes(), adminApiRouter.allowedMethods())
 
   app.use(router.routes(), router.allowedMethods())
