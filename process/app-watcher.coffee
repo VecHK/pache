@@ -17,6 +17,7 @@ watch_options =
   persistent: true
   ignoreInitial: true
   followSymlinks: false
+  ignorePermissionErrors: true
 
 getWatch = () ->
   chokidar = require 'chokidar'
