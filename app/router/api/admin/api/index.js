@@ -3,6 +3,7 @@ const Router = require('koa-router')
 module.exports = function () {
   const router = new Router
   const routers = [
+    './publish',
     './article',
     './category',
     // './upload-image'
