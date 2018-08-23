@@ -1,6 +1,8 @@
 Pache 3
 ---
 
+新版本的 Pache。
+
 ## 安装
 
 ```
@@ -11,6 +13,7 @@ yarn global add pache-blog
 
  - Redis
  - mongoDB
+ - node v9.3.0
 
 ## 运行
 
