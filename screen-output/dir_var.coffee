@@ -28,24 +28,24 @@ transform = (type, value) ->
 _valuePrint = (value) ->
   value_type = typeof value
 
-  if value == undefined
+  if value is undefined
     value = transform 'undefined', 'undefined'
-  else if typeof value == 'symbol'
+  else if typeof value is 'symbol'
     value = transform 'symbol', String value
-  else if typeof value == 'string'
+  else if typeof value is 'string'
     value = transform 'string', JSON.stringify value
-  else if isNaN(value)
+  else if isNaN value
     value = transform 'nan', 'NaN'
-  else unless isFinite(value)
+  else unless isFinite value
     value = transform 'infinity', 'Infinity'
-  else if typeof value == 'number'
+  else if typeof value is 'number'
     value = transform 'number', JSON.stringify value
-  else if value == null
+  else if value is null
     value = transform 'null', 'null'
   else
     value = String value
 
-  print(value)
+  print value
 
 valuePrint = (value, indent, property_indent) ->
   if Array.isArray value
@@ -64,7 +64,7 @@ rowPrint = (value, cursor, total, indent, property_indent, prefix = '') ->
   print ''.padEnd property_indent
   print prefix
   valuePrint value, indent, property_indent
-  dotPrint(cursor, total)
+  dotPrint cursor, total
   print "\n"
 
 
@@ -93,8 +93,8 @@ printObjectProperty = (obj, indent = 2, start_indent = 0) ->
 dir_var = (obj, opt = {}) ->
   opt = Object.assign {}, opt, default_options
 
-  valuePrint(obj, opt.indent, 0)
+  valuePrint obj, opt.indent, 0
 
-  print('\n')
+  print '\n'
 
 module.exports = dir_var
