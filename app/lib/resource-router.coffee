@@ -30,7 +30,7 @@ module.exports = (router, path, ...middlewares) ->
 
   router
     .get "#{path}/:id", ...middlewares, detectController 'get'
-    .post "#{path}", ...middlewares, detectController 'destroy'
+    .post "#{path}", ...middlewares, detectController 'create'
     .patch "#{path}/:id", ...middlewares, detectController 'update'
     .delete "#{path}/:id", ...middlewares, detectController 'destroy'
 
