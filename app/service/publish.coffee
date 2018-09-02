@@ -4,6 +4,7 @@ envir = require '../../envir'
 class PublishService extends require './service'
   create: (data) ->
     publish = new Publish data
+    publish.output = { _isOutput: true }
     publish.save()
 
   destroy: (id) ->
@@ -16,7 +17,7 @@ class PublishService extends require './service'
     id = String id
     publish = await this._get id
     unless publish
-      throw Object.assign new Error('publish not found'), { statusCode: 404 }
+      throw this.Error('publish not found', 404)
     return publish
 
   getList: () ->
