@@ -7,8 +7,14 @@ const handles = {
     this.remove('Content-Length')
     this.type = 'json'
 
-    this.status = code
-    this.body = data
+    if (data instanceof Promise) {
+      this.status = 500
+      this.body = { message: 'back data is instanceof Promise' }
+      out.error(`back data is instanceof Promise:`, data)
+    } else {
+      this.status = code
+      this.body = data
+    }
 
     return this
   },
