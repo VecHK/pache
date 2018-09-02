@@ -32,12 +32,8 @@ PublishSchema = new Schema
 
   # 转载相关字段
   repost:
-    title:
-      required: true
-      type: String
-    link:
-      type: String
-      default: ''
+    type: Schema.Types.Mixed
+    default: null
 
   is_draft:
     type: Boolean
@@ -64,5 +60,8 @@ PublishSchema = new Schema
   fusion_color:
     type: String
     default: '#CCC'
+
+PublishSchema.set 'toJSON',
+  virtuals: true
 
 mongoose.model 'Publish', PublishSchema
