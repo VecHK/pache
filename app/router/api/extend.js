@@ -8,9 +8,7 @@ const handles = {
     this.type = 'json'
 
     this.status = code
-    this.body = {
-      data
-    }
+    this.body = data
 
     return this
   },
