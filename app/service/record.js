@@ -1,13 +1,22 @@
 const envir = require('../../envir')
-const { Record } = require('../model')
+const { Record, Publish } = require('../model')
+const PublishService = require('./publish')
 const clone = require('../lib/clone')
 const isNum = require('is-number')
 
 class RecordService extends require('./service') {
-  create(data) {
+  // 创建文章记录
+  async create(data) {
     delete data._id
-    const record = new Record(data)
-    return record.save()
+
+    const publish = await PublishService.get(data.publish_id)
+    console.log('publish.record_lock', publish.record_lock)
+    if (publish.record_lock) {
+      throw this.Error('publish is locked', 423)
+    } else {
+      const record = new Record(data)
+      return record.save()
+    }
   }
 
   async destroy(id) {

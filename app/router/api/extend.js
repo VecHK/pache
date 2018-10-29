@@ -27,6 +27,14 @@ const handles = {
     return this.backFailMessage(message, 400)
   },
 
+  backForbidden(message = 'Forbidden') {
+    return this.backFailMessage(message, 403)
+  },
+
+  backLocked(message = 'Locked') {
+    return this.backFailMessage(message, 423)
+  },
+
   backNotFound(message = 'not found') {
     return this.backFailMessage(message, 404)
   },

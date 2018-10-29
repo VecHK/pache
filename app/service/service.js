@@ -1,10 +1,11 @@
+const envir = require('../../envir')
 const extend = require('../router/api/extend')()
 
-class Service { }
-Object.assign(Service.prototype, {
-  Error: extend.Error
-})
+class Service {}
 
-const service = new Service
+Object.assign(Service.prototype, {
+  Error: extend.Error,
+  envir
+})
 
 module.exports = Service

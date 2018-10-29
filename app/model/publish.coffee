@@ -45,6 +45,10 @@ PublishSchema = new Schema
     type: String
     default: null
 
+  lock_time:
+    type: Date
+    default: Date.now
+
   # 当前所指向的文章记录
   record:
     default: null
@@ -74,5 +78,9 @@ PublishSchema = new Schema
 
 PublishSchema.set 'toJSON',
   virtuals: true
+
+PublishSchema.virtual 'record_lock'
+  .get () ->
+    this.lock_time.valueOf() >= Date.now()
 
 mongoose.model 'Publish', PublishSchema
