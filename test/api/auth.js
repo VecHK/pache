@@ -21,8 +21,9 @@ let random_code = null
 test('獲取隨機碼', async t => {
   let web = await ag.get(PREFIX_URL + '/auth/random').expect(200).json(200)
 
-  t.is(typeof web.json, 'string')
-  random_code = web.json
+  const result = web.json
+  t.is(typeof result, 'string')
+  random_code = result
 })
 
 test('認證（錯誤的密碼）', async t => {
@@ -87,9 +88,11 @@ test('訪問 admin 模塊（已認證）', async t => {
   const login_pass = md5(random_code + envir.pass)
   let web = await ag.post(PREFIX_URL + '/auth/pass').testJson(login_pass, 200)
 
-  t.true(web.json)
+  const result = web.json
+  t.true(result)
 
   web = await ag.get(PREFIX_URL + '/publishes/1').expect(200)
 
-  t.not(web.status, 401)
+  const status = web.status
+  t.not(status, 401)
 })
