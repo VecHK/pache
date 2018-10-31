@@ -1,7 +1,9 @@
+require('coffeescript/register')
+
 const supertest = require('supertest')
 
 const envir = require('../envir')
-const TEST_DB = 'pache_test'
+const TEST_DB = 'pache3_test'
 envir.db = `mongodb://127.0.0.1:27017/${TEST_DB}`
 envir.limit = 3
 envir.pass = '測試用的哦'
