@@ -46,8 +46,6 @@ function fillAnswers(source_answers) {
 }
 
 function writeConfig(config_path, suc_data) {
-  require('colors')
-
   let status
   if (fs.existsSync(config_path)) {
     status = '已更新'
@@ -58,10 +56,10 @@ function writeConfig(config_path, suc_data) {
   fs.writeFileSync(config_path, suc_data)
 
   if (path.isAbsolute(config_path)) {
-    console.warn('\n配置文件 ' + `${config_path}`.bold.cyan + ` ${status}`)
+    console.log('\n配置文件 ' + `${config_path}` + ` ${status}`)
   } else {
     const config_abs_path = fs.realpathSync(config_path)
-    console.warn('\n配置文件 ' + `${config_abs_path}`.bold.cyan + ` ${status}`)
+    console.log('\n配置文件 ' + `${config_abs_path}` + ` ${status}`)
   }
 }
 
