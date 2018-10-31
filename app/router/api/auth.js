@@ -35,7 +35,7 @@ module.exports = function () {
     if (ctx.session.is_login) {
       return next()
     } else {
-      return ctx.back('需要登录', 401)
+      return ctx.backUnauthorized('需要登录')
     }
   })
 

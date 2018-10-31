@@ -13,7 +13,7 @@ const handles = {
       out.error(`back data is instanceof Promise:`, data)
     } else {
       this.status = code
-      this.body = data
+      this.body = JSON.stringify(data)
     }
 
     return this
@@ -27,12 +27,12 @@ const handles = {
     return this.backFailMessage(message, 400)
   },
 
-  backForbidden(message = 'Forbidden') {
-    return this.backFailMessage(message, 403)
+  backUnauthorized(message = 'Unauthorized') {
+    return this.backFailMessage(message, 401)
   },
 
-  backLocked(message = 'Locked') {
-    return this.backFailMessage(message, 423)
+  backForbidden(message = 'Forbidden') {
+    return this.backFailMessage(message, 403)
   },
 
   backNotFound(message = 'not found') {
@@ -45,6 +45,10 @@ const handles = {
 
   backGone(message = 'resource was delete') {
     return this.backFailMessage(message, 410)
+  },
+
+  backLocked(message = 'Locked') {
+    return this.backFailMessage(message, 423)
   },
 
   backError(message, code = 500) {
