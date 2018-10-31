@@ -8,7 +8,7 @@ module.exports = model
 Object.assign(model, {
   Category: require('./category') && mongoose.model('Category'),
 
-  Article: require('./article') && mongoose.model('Article'),
+  Record: require('./record') && mongoose.model('Record'),
 
   Publish: require('./publish') && mongoose.model('Publish'),
 

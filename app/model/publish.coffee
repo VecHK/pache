@@ -35,14 +35,29 @@ PublishSchema = new Schema
     type: Schema.Types.Mixed
     default: null
 
+  # 是否是草稿
   is_draft:
     type: Boolean
     default: false
 
-  article:
-    required: true
+  # 操作文章记录需要使用到的 record_key
+  record_key:
+    type: String
+    default: null
+
+  lock_time:
+    type: Date
+    default: Date.now
+
+  # 当前所指向的文章记录
+  record:
+    default: null
     type: ObjectId
-    ref: 'record'
+    ref: 'Record'
+
+  title:
+    type: String
+    default: '(title)'
 
   output:
     required: true
@@ -55,7 +70,7 @@ PublishSchema = new Schema
   category:
     default: null
     type: ObjectId
-    ref: 'category'
+    ref: 'Category'
 
   fusion_color:
     type: String
@@ -63,5 +78,9 @@ PublishSchema = new Schema
 
 PublishSchema.set 'toJSON',
   virtuals: true
+
+PublishSchema.virtual 'record_lock'
+  .get () ->
+    this.lock_time.valueOf() >= Date.now()
 
 mongoose.model 'Publish', PublishSchema

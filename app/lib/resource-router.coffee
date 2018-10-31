@@ -33,6 +33,8 @@ module.exports = (router, path, ...middlewares) ->
     .post "#{path}", ...middlewares, detectController 'create'
     .patch "#{path}/:id", ...middlewares, detectController 'update'
     .delete "#{path}/:id", ...middlewares, detectController 'destroy'
+    .lock "#{path}/:id", ...middlewares, detectController 'lock'
+    .unlock "#{path}/:id", ...middlewares, detectController 'unlock'
 
   pluralized = pluralizePath path
   router
