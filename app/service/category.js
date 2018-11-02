@@ -17,7 +17,7 @@ module.exports = new class extends require('./service') {
     id = String(id)
     const category = await Category.findById(id)
     if (!category) {
-      throw this.Error('category not found', 404)
+      throw this.Interrup('category not found', 404)
     }
 
     return category
@@ -41,9 +41,13 @@ module.exports = new class extends require('./service') {
 
     if (data.hasOwnProperty('name')) {
       if (category.name !== data.name) {
-        const check_category = await Category.findOne({ name: category.name })
-        if (check_category) {
-          throw this.Error('duplicate category name', 409)
+        const same_name_category = await Category.findOne({ name: category.name })
+        if (
+          same_name_category &&
+          same_name_category._id.toString() !== id
+        ) {
+          console.dir(same_name_category, { colors: true })
+          throw this.Interrup('duplicate category name', 409)
         }
       }
     }
@@ -56,5 +60,4 @@ module.exports = new class extends require('./service') {
       return this.get(id)
     })
   }
-
 }
