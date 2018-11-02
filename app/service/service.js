@@ -5,6 +5,7 @@ class Service {}
 
 Object.assign(Service.prototype, {
   Error: extend.Error,
+  Interrup: extend.Interrup,
   envir
 })
 
