@@ -49,7 +49,7 @@ module.exports = new class RecordController {
   }
 
   // 更新文章记录
-  async update(ctx) {
+  async patch(ctx) {
     let { id } = ctx.params
     let { body } = ctx.request
 
