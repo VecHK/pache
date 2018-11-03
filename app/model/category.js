@@ -14,24 +14,40 @@ const ObjectId = mongoose.Schema.Types.ObjectId;
 */
 
 const CategorySchema = new Schema({
-  value: {
-  },
+  // 分类名
   name: {
     type: String,
     unique: true,
   },
+
+  // 分类排序值
   sort: {
     type: Number,
     default: 0
   },
+
+  // 分类类型
   type: {
     type: String,
     default: 'category'
   },
+
+  // 分类类型的值
+  value: {
+  },
+
+  // 分类颜色
   color: {
     type: String,
     default: '#999'
   },
+
+  // 决定分类在文章列表页里的分类栏是放在左边还是右边
+  position: {
+    required: true,
+    type: String,
+    enum: [ 'left', 'right' ]
+  }
 });
 
 const cateUtils = {

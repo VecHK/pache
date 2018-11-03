@@ -35,7 +35,7 @@ module.exports = new class PublishController
     )
 
   # TODO 补完修改发布的接口
-  update: (ctx) ->
+  patch: (ctx) ->
     if publish.record_lock and (record_key != publish.record_key)
       return ctx.backForbidden('invalid record_key')
 

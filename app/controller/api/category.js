@@ -16,11 +16,21 @@ module.exports = new class CategoryController {
 
   // 获取分类列表
   async getList(ctx) {
-    ctx.back(await service.getList())
+    const list = await service.getList()
+
+    ctx.back({
+      left: list.filter(category => category.position === 'left'),
+      right: list.filter(category => category.position === 'right')
+    })
   }
 
-  // 更新分类
-  async update(ctx) {
+  // 获取分类
+  async get(ctx) {
+    ctx.back(await service.get(ctx.params.id))
+  }
+
+  // 修改分类
+  async patch(ctx) {
     const { id } = ctx.params
     const { body } = ctx.request
     delete body._id

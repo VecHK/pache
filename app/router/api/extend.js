@@ -74,13 +74,20 @@ const extendProperties = {
         ctx.backNotFound()
       }
     }).catch(err => {
-      out.error(`API got an Error: ${err.message} (code: ${err.code})\n ${err.stack}`)
+      if (!err.is_interrup) {
+        out.error(`API got an Error: ${err.message}\n ${err.stack}`)
+      }
+
       ctx.backError(err.message, err.statusCode || 500)
     })
   },
 
   Error(message = 'internal error', statusCode = 500) {
-    return Object.assign(new Error(message), { statusCode })
+    return Object.assign(Error(message), { statusCode })
+  },
+
+  Interrup(message, statusCode) {
+    return Object.assign(Error(message), { statusCode, is_interrup: true })
   },
 
   throwError() {
