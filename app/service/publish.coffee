@@ -79,9 +79,9 @@ class PublishService extends require './service'
   getList: (opt = {}) ->
     { limit } = envir
     conditions = {}
-    { page, category_id, tags, populate = false } = opt
+    { page, category, tags, populate = false } = opt
 
-    this.categoryIdCondition(conditions, category_id)
+    this.categoryIdCondition(conditions, category)
     this.tagsCondition(conditions, tags)
 
     count = await this.count(conditions)

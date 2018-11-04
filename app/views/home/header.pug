@@ -19,10 +19,8 @@
 -   }
 -   return obj;
 - }
-- var left_1 = createDirect(categories[0]);
-- var left = createDirect(categories[1]);
-- var right = createDirect(categories[2]);
-- var right_1 = createDirect(categories[3]);
+- var left_categories = categories.filter(category => category.position === 'left').map(createDirect)
+- var right_categories = categories.filter(category => category.position === 'right').map(createDirect)
 - var home_status = '';
 - if (!noHome) {
 -   home_status = 'current';
@@ -30,22 +28,20 @@
 -
 - function conditionTagsUrl(tags, current_tag) {
 -   if (tags.length > 1) {
--			return 'tag/' + tags.filter(tag => tag !== current_tag).toString()
--		} else {
--			return ''
--		}
+-     return 'tag/' + tags.filter(tag => tag !== current_tag).toString()
+-   } else {
+-     return ''
+-   }
 - }
 
 header(role="banner")
-  if left_1.src
-    !=`<a ${left_1.status} ${left_1.href}>${left_1.src.name}</a>`
-  if left.src
-    !=`<a ${left.status} ${left.href}>${left.src.name}</a>`
+  each category in left_categories
+    if category.src
+      !=`<a ${category.status} ${category.href}>${category.src.name}</a>`
   !=`<a ${home_status} href="/">首頁</a>`
-  if right.src
-    !=`<a ${right.status} ${right.href}>${right.src.name}</a>`
-  if right_1.src
-    !=`<a ${right_1.status} ${right_1.href}>${right_1.src.name}</a>`
+  each category in right_categories
+    if category.src
+      !=`<a ${category.status} ${category.href}>${category.src.name}</a>`
 
 div.page-shadow
 if conditions.tags
