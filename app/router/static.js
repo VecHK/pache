@@ -3,7 +3,11 @@ const path = require('path')
 const root_dir = require('app-root-path').toString()
 const pache_static = require('../lib/pache-static')
 
+const koaRange = require('koa-range')
+
 module.exports = function (app, envir) {
+  app.use(koaRange)
+
   app.use(pache_static({
     path: path.join(root_dir, './app/page-dist/'),
 
