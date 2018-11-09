@@ -15,7 +15,7 @@ class PublishService extends require './service'
     publish = await this.get id
 
     if publish.record_lock
-      throw this.Error 'publish is locked', 423
+      throw this.Interrup 'publish is locked', 423
 
     await RecordService.getRecordsByPublishId(publish.record).remove()
 
@@ -36,7 +36,7 @@ class PublishService extends require './service'
     console.log('get publish', publish)
 
     unless publish
-      throw this.Error 'publish not found', 404
+      throw this.Interrup 'publish not found', 404
 
     return publish
 
@@ -45,10 +45,7 @@ class PublishService extends require './service'
 
   list: (conditions = {}, populate = false, page, limit = 10, dateSort = -1) ->
     if !isNum(page) || page < 1
-      throw Object.assign(
-        new Error('page must be Integer and greater or equal to 1'),
-        { statusCode: 400 }
-      )
+      throw this.Interrup 'page must be Integer and greater or equal to 1', 400
 
     start = (page - 1) * limit
 
@@ -104,7 +101,7 @@ class PublishService extends require './service'
       publish.record = record._id
       publish.save()
     else
-      throw this.Error 'record is not belongs this publish', 403
+      throw this.Interrup 'record is not belongs this publish', 403
 
   refreshRecordKey: (publish) ->
     new_record_key = randomString 32, true

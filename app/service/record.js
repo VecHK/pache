@@ -12,7 +12,7 @@ class RecordService extends require('./service') {
     const publish = await PublishService.get(data.publish_id)
     console.log('publish.record_lock', publish.record_lock)
     if (publish.record_lock) {
-      throw this.Error('publish is locked', 423)
+      throw this.Interrup('publish is locked', 423)
     } else {
       const record = new Record(data)
       return record.save()
@@ -52,10 +52,7 @@ class RecordService extends require('./service') {
     } = opt
 
     if (!isNum(page) || page < 1) {
-      throw Object.assign(
-        new Error('page must be Integer and greater or equal to 1'),
-        { statusCode: 400 }
-      )
+      throw this.Interrup('page must be Integer and greater or equal to 1', 400)
     }
 
     let start = (page - 1) * limit
