@@ -15,6 +15,7 @@ Object.assign(model, {
   async connect() {
     try {
       const result = await mongoose.connect(envir.db, {
+        autoIndex: false,
         useNewUrlParser: true,
         poolSize: 20
       })
