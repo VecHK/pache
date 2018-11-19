@@ -1,0 +1,27 @@
+language: node_js
+
+node_js:
+  - 8.12.0
+
+services:
+  - redis
+
+cache: yarn
+
+addons:
+  apt:
+    sources:
+      - mongodb-upstart
+      - mongodb-3.0-precise
+    packages:
+      - mongodb-org-server
+      - mongodb-org-shell
+
+script:
+  - yarn -D
+
+after_success: yarn nyc ava
+
+branches:
+  only:
+    - dev
