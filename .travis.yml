@@ -4,18 +4,10 @@ node_js:
   - 8.12.0
 
 services:
-  - redis
+  - redis-server
+  - mongodb
 
 cache: yarn
-
-addons:
-  apt:
-    sources:
-      - mongodb-upstart
-      - mongodb-3.0-precise
-    packages:
-      - mongodb-org-server
-      - mongodb-org-shell
 
 script:
   - yarn -D
