@@ -9,7 +9,7 @@ Router = require 'koa-router'
 module.exports = () ->
   router = new Router
 
-  resource router, '/publish', PublishController
   router.patch '/publish/:id/release/:record_id', PublishController.release
+  resource router, '/publish', PublishController
 
   return router

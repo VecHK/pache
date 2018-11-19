@@ -34,10 +34,9 @@ module.exports = new class PublishController
       })
     )
 
-  # TODO 补完修改发布的接口
-  patch: (ctx) ->
-    if publish.record_lock and (record_key != publish.record_key)
-      return ctx.backForbidden('invalid record_key')
+  update: (ctx) ->
+    { params: { id }, request: { body } } = ctx
+    ctx.back await PublishService.update id, body.data, body.record_key
 
   # 发布文章
   release: (ctx) ->

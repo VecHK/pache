@@ -17,10 +17,10 @@ class PublishService extends require './service'
     publish.save()
 
   destroy: (id) ->
-    publish = await this.get id
+    publish = await @get id
 
     if publish.record_lock
-      throw this.Interrup 'publish is locked', 423
+      throw @Interrup 'publish is locked', 423
 
     await RecordService.getRecordsByPublishId(publish.record).remove()
 
@@ -32,14 +32,14 @@ class PublishService extends require './service'
     id = String id
 
     if populate
-      publish = await (this._get id)
+      publish = await (@_get id)
       if publish.record
         await publish.populate('record')
     else
-      publish = await this._get id
+      publish = await @_get id
 
     unless publish
-      throw this.Interrup 'publish not found', 404
+      throw @Interrup 'publish not found', 404
 
     return publish
 
@@ -48,7 +48,7 @@ class PublishService extends require './service'
 
   list: (conditions = {}, populate = false, page, limit = 10, dateSort = -1) ->
     if !isNum(page) || page < 1
-      throw this.Interrup 'page must be Integer and greater or equal to 1', 400
+      throw @Interrup 'page must be Integer and greater or equal to 1', 400
 
     start = (page - 1) * limit
 
@@ -81,11 +81,11 @@ class PublishService extends require './service'
     conditions = {}
     { page, category, tags, populate = false } = opt
 
-    this.categoryIdCondition(conditions, category)
-    this.tagsCondition(conditions, tags)
+    @categoryIdCondition(conditions, category)
+    @tagsCondition(conditions, tags)
 
-    count = await this.count(conditions)
-    list = await this.list(conditions, populate, page)
+    count = await @count(conditions)
+    list = await @list(conditions, populate, page)
 
     return {
       page,
@@ -94,6 +94,21 @@ class PublishService extends require './service'
       count,
       list,
     }
+
+  update: (id, data, record_key) ->
+    publish = @get id
+
+    if publish.record_lock and (record_key != publish.record_key)
+      throw @Interrup 'invalid record_key', 403
+
+    Reflect.deleteProperty(data, '_id')
+
+    await Publish.update(
+      { _id: String(id) },
+      { $set: data }
+    )
+
+    @get id
 
   release: (id, record_id) ->
     id = String id
@@ -104,7 +119,7 @@ class PublishService extends require './service'
       publish.record = record._id
       publish.save()
     else
-      throw this.Interrup 'record is not belongs this publish', 403
+      throw @Interrup 'record is not belongs this publish', 403
 
   refreshRecordKey: (publish) ->
     new_record_key = randomString 32, true
