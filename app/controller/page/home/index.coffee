@@ -1,7 +1,7 @@
 isNum = require 'is-number'
 root_dir = (require 'app-root-path').resolve
 
-articleService = require root_dir 'app/service/article'
+publishService = require root_dir 'app/service/publish'
 categoryService = require root_dir 'app/service/category'
 
 isObjectId = (require 'mongoose').Types.ObjectId.isValid
@@ -52,8 +52,8 @@ module.exports = new class extends require '../../'
         category_id: category.id
         category_name: category.name
 
-    result = await articleService.getList {
-      category_id: conditions.category_id
+    result = await publishService.getList {
+      category: conditions.category_id
       tags
       page
     }

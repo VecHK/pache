@@ -29,7 +29,8 @@ const CategorySchema = new Schema({
   // 分类类型
   type: {
     type: String,
-    default: 'category'
+    default: 'category',
+    enum: [ 'category', 'article', 'link' ]
   },
 
   // 分类类型的值
