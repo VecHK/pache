@@ -10,7 +10,8 @@
     "page-generate": "webpack --config webpack.config.js",
     "page-watch": "webpack --config webpack.config.js --watch",
     "test": "ava ./test --verbose",
-    "test-watch": "ava ./test --watch"
+    "test-watch": "ava ./test --watch",
+    "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov && yarn codecov"
   },
   "ava": {
     "files": [
@@ -62,6 +63,7 @@
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-stage-2": "^6.24.1",
+    "codecov": "^3.1.0",
     "css-loader": "^1.0.0",
     "less": "^3.8.0",
     "less-loader": "^4.1.0",

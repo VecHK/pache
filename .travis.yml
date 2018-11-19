@@ -11,8 +11,8 @@ cache: yarn
 
 script:
   - yarn -D
-
-after_success: yarn nyc ava
+  - yarn nyc ava
+  - yarn report-coverage
 
 branches:
   only:
