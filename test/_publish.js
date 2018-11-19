@@ -28,6 +28,16 @@ export default class Publish {
     return web.json
   }
 
+  async lock(id) {
+    let web = await this.agent.lock(`/api/publish/${id}`).json(200)
+    return web.json
+  }
+
+  async unlock(id) {
+    let web = await this.agent.unlock(`/api/publish/${id}`).json(200)
+    return web.json
+  }
+
   constructor(agent) {
     this.agent = agent
   }
