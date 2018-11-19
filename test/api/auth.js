@@ -5,16 +5,20 @@ const test = require('ava')
 const crypto = require('crypto')
 const md5 = str => crypto.createHash('md5').update(str).digest('hex')
 
-const { Model, envir, JsonMiddle } = require('../_test_envirment')
+const {
+  Model,
+  envir,
+  JsonMiddle,
+  createAgent
+} = require('../_test_envirment')
 
 const app = require('../../app')
 
 const PREFIX_URL = '/api'
 
-const agent = app => supertest.agent(app.callback())
 let ag = null
 test.before('準備環境', async t => {
-  ag = agent(app)
+  ag = createAgent()
 })
 
 let random_code = null
@@ -63,21 +67,21 @@ test('獲取認證狀態（已登錄）', async t => {
 })
 
 test('登出', async t => {
-  let web = await agent(app).get(PREFIX_URL + '/auth/logout').json(200)
+  let web = await ag.get(PREFIX_URL + '/auth/logout').json(200)
 
   const result = web.json
   t.is(result, true)
 })
 
 test('獲取認證狀態（未登錄）', async t => {
-  let web = await agent(app).get(PREFIX_URL + '/auth/status').json(200)
+  let web = await ag.get(PREFIX_URL + '/auth/status').json(200)
 
   const result = web.json
   t.false(result)
 })
 
 test('訪問 admin 模塊（未登錄被拒）', async t => {
-  let web = await agent(app).get(PREFIX_URL + '/bucunzai').json(401);
+  let web = await ag.get(PREFIX_URL + '/bucunzai').json(401);
 
   t.regex(web.json.message, /需要登录/)
 })
