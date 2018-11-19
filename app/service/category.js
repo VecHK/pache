@@ -10,7 +10,7 @@ module.exports = new class extends require('./service') {
 
   async destroy(id) {
     const category = await this.get(id)
-    return category.remove()
+    return category.delete()
   }
 
   async get(id) {
@@ -53,7 +53,7 @@ module.exports = new class extends require('./service') {
     }
 
     delete data._id
-    return Category.update(
+    return Category.updateOne(
       { _id: String(id) },
       { $set: data, orz: 1 }
     ).then(() => {
