@@ -1,7 +1,12 @@
 envir = require '../../envir'
 isNum = require 'is-number'
 { Publish } = require '../model'
-RecordService = require('./record')
+
+RecordService = null
+
+setTimeout () ->
+  RecordService = require('./record')
+, 16
 
 randomString = require('../lib/random-string')
 
@@ -32,8 +37,6 @@ class PublishService extends require './service'
         await publish.populate('record')
     else
       publish = await this._get id
-
-    console.log('get publish', publish)
 
     unless publish
       throw this.Interrup 'publish not found', 404
