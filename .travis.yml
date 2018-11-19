@@ -13,7 +13,3 @@ script:
   - yarn -D
   - yarn nyc ava
   - yarn report-coverage
-
-branches:
-  only:
-    - dev
