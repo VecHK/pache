@@ -1,5 +1,16 @@
 Pache 3
----
+-------
+
+[![build status][travis-image]][travis-url]
+[![codecov.io][codecov-image]][codecov-url]
+[![node version][node-image]][node-url]
+
+[travis-image]: https://travis-ci.org/VecHK/pache.svg?branch=dev
+[travis-url]: https://travis-ci.org/VecHK/Pache
+[codecov-image]: https://img.shields.io/codecov/c/github/VecHK/Pache/dev.svg
+[codecov-url]: https://codecov.io/github/VecHK/Pache?branch=dev
+[node-image]: https://img.shields.io/badge/node.js-%3E=_8.12-green.svg
+[node-url]: http://nodejs.org/download/
 
 新版本的 Pache。
 
