@@ -2,27 +2,22 @@ require('coffeescript/register')
 
 import 'arr-ext'
 
-const Koa = require('koa')
-const supertest = require('supertest')
-
 const test = require('ava')
-const assert = require('power-assert')
 
 const crypto = require('crypto')
 const md5 = str => crypto.createHash('md5').update(str).digest('hex')
 
-const { Model, envir, JsonMiddle } = require('../_test_envirment')
-
-const appRouter = require('../../app/router')
-const app = new Koa
-appRouter(app)
+const {
+  Model,
+  envir,
+  JsonMiddle,
+  createAgent
+} = require('../_test_envirment')
 
 /* 準備環境 */
 let ag = null
 test.before('準備環境', async t => {
-  const agent = supertest.agent(app.callback())
-
-  ag = agent
+  ag = createAgent()
 
   // 登录
   const random_web = await ag.get('/api/auth/random').json(200)
@@ -36,7 +31,8 @@ test.before('準備環境', async t => {
 
   await Model.connectStatus
   try {
-    await Model.removeCollection('articles')
+    await Model.removeCollection('records')
+    await Model.removeCollection('publishes')
   } catch (_) {}
   try {
     await Model.removeCollection('categories')

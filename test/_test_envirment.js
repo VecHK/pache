@@ -48,8 +48,20 @@ supertest.Test.prototype.sendJson = function (value) {
     .send(value)
 }
 
+const Koa = require('koa')
+const appRouter = require('../app/router')
+const app = new Koa
+appRouter(app)
+
+const server = app.listen()
+function createAgent() {
+  return supertest.agent(server)
+}
+
 module.exports = {
   JsonMiddle,
   envir,
-  Model: require('../app/model')
+  Model: require('../app/model'),
+  createAgent,
+  agent: createAgent()
 }
