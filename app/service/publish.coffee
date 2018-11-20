@@ -22,9 +22,9 @@ class PublishService extends require './service'
     if publish.record_lock
       throw @Interrup 'publish is locked', 423
 
-    await RecordService.getRecordsByPublishId(publish.record).remove()
+    await RecordService.getRecordsByPublishId(publish.record).deleteOne()
 
-    publish.remove()
+    publish.delete()
 
   _get: (_id) => Publish.findOne { _id }
 
@@ -103,7 +103,7 @@ class PublishService extends require './service'
 
     Reflect.deleteProperty(data, '_id')
 
-    await Publish.update(
+    await Publish.updateOne(
       { _id: String(id) },
       { $set: data }
     )
