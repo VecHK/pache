@@ -108,7 +108,9 @@ test('修改发布', async t => {
 
   t.is(pub.title, 'will_be_update')
 
-  const mod = await Publish.update(pub._id, { title: 'updated' })
+  const mod = await Publish.update(pub._id, {
+    data: { title: 'updated' }
+  })
 
   t.is(typeof mod, 'object')
   t.not(mod, null)
@@ -118,4 +120,65 @@ test('修改发布', async t => {
   const updated = await Publish.get(mod._id)
   t.is(updated.title, 'updated')
   t.is(updated._id, mod._id)
+})
+
+test('锁定发布', async t => {
+  const pub = await Publish.create({ title: 'lock' })
+
+  t.is(typeof pub, 'object')
+  t.not(pub, null)
+  t.is(pub.title, 'lock')
+
+  const info = await Publish.lock(pub._id)
+  const { record_key } = info
+
+  await Publish.update(pub._id, {
+    data: { title: 'locked' }
+  }, 403)
+
+  let mod =   await Publish.update(pub._id, {
+    data: { title: 'locked' },
+    record_key
+  })
+  t.is(typeof mod, 'object')
+  t.not(mod, null)
+  t.is(mod.title, 'locked')
+
+  const updated = await Publish.get(pub._id)
+  t.is(typeof updated, 'object')
+  t.not(updated, null)
+  t.is(updated.title, 'locked')
+  t.is(updated.record_key, undefined)
+})
+
+test('锁定发布', async t => {
+  const pub = await Publish.create({ title: 'will_be_unlock' })
+  const info = await Publish.lock(pub._id)
+  const { record_key } = info
+
+  await Publish.unlock(pub._id, 'failure_record_key', 403)
+
+  await Publish.update(pub._id, {
+    data: { title: 'unlocked' }
+  }, 403)
+
+  let mod = await Publish.get(pub._id)
+  t.is(typeof mod, 'object')
+  t.not(mod, null)
+  t.is(mod.title, 'will_be_unlock')
+
+
+  await Publish.unlock(pub._id, record_key, 200)
+  mod = await Publish.update(pub._id, {
+    data: { title: 'unlocked' }
+  }, 200)
+  t.is(typeof mod, 'object')
+  t.not(mod, null)
+  t.is(mod.title, 'unlocked')
+
+  const updated = await Publish.get(pub._id)
+  t.is(typeof updated, 'object')
+  t.not(updated, null)
+  t.is(updated.title, 'unlocked')
+  t.is(updated.record_key, undefined)
 })

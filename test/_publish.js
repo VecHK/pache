@@ -20,11 +20,11 @@ export default class Publish {
     return web.json
   }
 
-  async update(id, data, record_key) {
+  async update(id, body, expect_status_code = 200) {
     let web = await this.agent.put(`/api/publish/${id}`).testJson({
-      record_key,
-      data
-    }, 200)
+      data: body.data,
+      record_key: body.record_key
+    }, expect_status_code)
     return web.json
   }
 
@@ -33,8 +33,9 @@ export default class Publish {
     return web.json
   }
 
-  async unlock(id) {
-    let web = await this.agent.unlock(`/api/publish/${id}`).json(200)
+  async unlock(id, record_key, expect_status_code = 200) {
+    const url = `/api/publish/${id}?record_key=${encodeURIComponent(record_key)}`
+    let web = await this.agent.unlock(url).json(expect_status_code)
     return web.json
   }
 
