@@ -61,7 +61,7 @@ module.exports = new class PublishController
   # 解锁文章
   unlock: (ctx) ->
     { id } = ctx.params
-    { record_key } = ctx.request.body
+    { record_key } = ctx.request.query
 
     publish = await PublishService.get id
 

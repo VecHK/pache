@@ -96,7 +96,7 @@ class PublishService extends require './service'
     }
 
   update: (id, data, record_key) ->
-    publish = @get id
+    publish = await @get id
 
     if publish.record_lock and (record_key != publish.record_key)
       throw @Interrup 'invalid record_key', 403
