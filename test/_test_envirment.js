@@ -10,6 +10,8 @@ envir.pass = '測試用的哦'
 
 import _Auth from './_auth'
 
+const Model = require('../app/model')
+
 /**
   JSON 統一格式
   @param msg 消息
@@ -85,15 +87,24 @@ async function createAdminAgent() {
     ag[method](...args).set('Authorization', `Bearer ${token}`)
 
   return Object.assign(fn, {
-    agent: ag
+    agent: ag,
+    token
   })
 }
 
 module.exports = {
   JsonMiddle,
   envir,
-  Model: require('../app/model'),
   createAgent,
   createAdminAgent,
-  agent: createAgent()
+  agent: createAgent(),
+  Model,
+  async clearModel() {
+    await Model.connectStatus
+    await [
+      Model.removeCollection('records'),
+      Model.removeCollection('publishes'),
+      Model.removeCollection('categories')
+    ].map(p => p.catch(() => {}))
+  }
 }

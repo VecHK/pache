@@ -3,7 +3,7 @@ import 'arr-ext'
 const test = require('ava')
 
 const {
-  Model,
+  clearModel,
   createAdminAgent
 } = require('../_test_envirment')
 
@@ -12,13 +12,7 @@ let ag = null
 test.before('準備環境', async t => {
   ag = await createAdminAgent()
 
-  await Model.connectStatus
-
-  await [
-    Model.removeCollection('records'),
-    Model.removeCollection('publishes'),
-    Model.removeCollection('categories')
-  ].map(p => p.catch(() => {}))
+  await clearModel()
 })
 
 async function createCategory(obj = {}) {
