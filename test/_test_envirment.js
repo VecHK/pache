@@ -24,28 +24,44 @@ const JsonMiddle = (res) => {
   return res
 }
 
-supertest.Test.prototype.testJson = function (value, status = 200) {
+supertest.Test.prototype.testJson = function (value, status = 200, token) {
   value = JSON.stringify(value)
-  return this.set('Content-Type', 'application/json')
+
+  let inst = this.set('Content-Type', 'application/json')
+  if (token) {
+    inst = inst.set('Authorization', `Bearer ${token}`)
+  }
+
+  return inst
     .send(value)
     .expect(status)
     .expect('Content-Type', /json/)
     .then(JsonMiddle)
 }
 
-supertest.Test.prototype.json = function (expect_status = 200) {
-  return this.set('Content-Type', 'application/json')
+supertest.Test.prototype.json = function (expect_status = 200, token) {
+  let inst = this.set('Content-Type', 'application/json')
+  if (token) {
+    inst = inst.set('Authorization', `Bearer ${token}`)
+  }
+
+  return inst
     .expect(expect_status)
     .expect('Content-Type', /json/)
     .then(JsonMiddle)
 }
 
-supertest.Test.prototype.sendJson = function (value) {
-  if (typeof(value) === 'object') {
+supertest.Test.prototype.sendJson = function (value, token) {
+  if (value && (typeof(value) === 'object')) {
     value = JSON.stringify(value)
   }
-  return this.set('Content-Type', 'application/json')
-    .send(value)
+
+  const inst = this.set('Content-Type', 'application/json')
+  if (token) {
+    inst = inst.set('Authorization', `Bearer ${token}`)
+  }
+
+  return inst.send(value)
 }
 
 const Koa = require('koa')

@@ -21,82 +21,59 @@ test.before('準備環境', async t => {
   ag = createAgent()
 })
 
-let random_code = null
-test('獲取隨機碼', async t => {
-  let web = await ag.get(PREFIX_URL + '/auth/random').expect(200).json(200)
-
+async function getLoginInfo(t) {
+  let web = await ag.get(PREFIX_URL + '/auth/login-info').expect(200).json(200)
   const result = web.json
-  t.is(typeof result, 'string')
-  random_code = result
+
+  if (t) {
+    t.is(typeof result, 'object')
+    t.is(typeof result.salt, 'string')
+    t.is(typeof result.token, 'string')
+  }
+
+  return result
+}
+
+async function adminLogin(login_token, salt, pass, expect_status = 200) {
+  let web = await ag.post(PREFIX_URL + '/auth/login').testJson({
+    pass: md5(`${salt}${pass}`),
+    token: login_token
+  }, expect_status)
+
+  return web.json
+}
+
+test('获取登录 Token 和盐', async t => {
+  await getLoginInfo(t)
 })
 
-test('認證（錯誤的密碼）', async t => {
-  let web = await ag.post(PREFIX_URL + '/auth/pass').testJson(
-    '這絕對會是錯誤的密碼，朋友',
-    200
-  )
-
-  const result = web.json
-  t.false(result, false)
+test('登录(密码正确)', async t => {
+  let login_info = await getLoginInfo(t)
+  const token = await adminLogin(login_info.token, login_info.salt, envir.pass)
+  t.is(typeof token, 'string')
 })
 
-test('認證（正確的密碼）', async t => {
-  const random_web = await ag.get(PREFIX_URL + '/auth/random').then(JsonMiddle)
-  const random_code = random_web.json
+test('登录(密码错误)', async t => {
+  let login_info = await getLoginInfo(t)
 
-  const login_pass = md5(random_code + envir.pass)
-  let web = await ag.post(PREFIX_URL + '/auth/pass')
-    .testJson(login_pass, 200)
-    .then(JsonMiddle)
-
-  const result = web.json
-  t.true(result)
+  const err = await adminLogin(login_info.token, login_info.salt, 'failureError', 403)
+  t.is(typeof err, 'object')
+  t.truthy(err)
 })
 
-test('獲取認證狀態（已登錄）', async t => {
-  const random_web = await ag.get(PREFIX_URL + '/auth/random').json(200)
-  const random_code = random_web.json
-
-  const login_pass = md5(random_code + envir.pass)
-  let web = await ag.post(PREFIX_URL + '/auth/pass').testJson(login_pass, 200)
-
-  web = await ag.get(PREFIX_URL + '/auth/status').json(200)
-
-  const result = web.json
-  t.is(result, true)
+test('访问 admin 模块（未登录被拒）', async t => {
+  let web = await ag.get(PREFIX_URL + '/publishes/1').json(401);
+  let err = web.json
+  t.is(typeof err, 'object')
+  t.truthy(err)
 })
 
-test('登出', async t => {
-  let web = await ag.get(PREFIX_URL + '/auth/logout').json(200)
+test('访问 admin 模块（已登录）', async t => {
+  let login_info = await getLoginInfo(t)
+  const token = await adminLogin(login_info.token, login_info.salt, envir.pass)
+
+  const web = await ag.get(PREFIX_URL + '/publishes/1').json(200, token)
 
   const result = web.json
-  t.is(result, true)
-})
-
-test('獲取認證狀態（未登錄）', async t => {
-  let web = await ag.get(PREFIX_URL + '/auth/status').json(200)
-
-  const result = web.json
-  t.false(result)
-})
-
-test('訪問 admin 模塊（未登錄被拒）', async t => {
-  let web = await ag.get(PREFIX_URL + '/bucunzai').json(401);
-
-  t.regex(web.json.message, /需要登录/)
-})
-
-test('訪問 admin 模塊（已認證）', async t => {
-  const random_web = await ag.get(PREFIX_URL + '/auth/random').json(200)
-  const random_code = random_web.json
-  const login_pass = md5(random_code + envir.pass)
-  let web = await ag.post(PREFIX_URL + '/auth/pass').testJson(login_pass, 200)
-
-  const result = web.json
-  t.true(result)
-
-  web = await ag.get(PREFIX_URL + '/publishes/1').expect(200)
-
-  const status = web.status
-  t.not(status, 401)
+  t.is(typeof result, 'object')
 })
