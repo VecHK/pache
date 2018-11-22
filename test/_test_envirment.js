@@ -8,6 +8,8 @@ envir.db = `mongodb://127.0.0.1:27017/${TEST_DB}`
 envir.limit = 3
 envir.pass = '測試用的哦'
 
+import _Auth from './_auth'
+
 /**
   JSON 統一格式
   @param msg 消息
@@ -74,10 +76,24 @@ function createAgent() {
   return supertest.agent(server)
 }
 
+async function createAdminAgent() {
+  const ag = supertest.agent(server)
+  const Auth = new _Auth(ag)
+  const token = await Auth.login()
+
+  const fn = (method, ...args) =>
+    ag[method](...args).set('Authorization', `Bearer ${token}`)
+
+  return Object.assign(fn, {
+    agent: ag
+  })
+}
+
 module.exports = {
   JsonMiddle,
   envir,
   Model: require('../app/model'),
   createAgent,
+  createAdminAgent,
   agent: createAgent()
 }
