@@ -46,17 +46,6 @@ module.exports = function () {
     secret: envir.JWT_TOKEN
   }))
 
-  router.get('/auth/status', async (ctx, next) => {
-    const { user } = ctx.state
-    console.log('state user', user)
-
-    ctx.back(Boolean(user.status))
-  })
-
-  router.get('/auth/logout', async (ctx, next) => {
-    ctx.back((delete ctx.session.is_login) && (delete ctx.session.random))
-  })
-
   router.all('/*', async (ctx, next) => {
     if (ctx.state.user.status) {
       return next()
