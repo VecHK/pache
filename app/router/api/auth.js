@@ -42,9 +42,16 @@ module.exports = function () {
     }
   })
 
-  router.all('/*', koa_jwt({
+  const jwt_middleware = koa_jwt({
     secret: envir.JWT_TOKEN
-  }))
+  })
+  router.all('/*', async function () {
+    try {
+      await jwt_middleware.call(this, ...arguments)
+    } catch (err) {
+      throw Object.assign(err, { is_jwt_error: true })
+    }
+  })
 
   router.all('/*', async (ctx, next) => {
     if (ctx.state.user.status) {
