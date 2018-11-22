@@ -28,6 +28,8 @@
 # 或者禁止外網訪問的 MongoDB 配置
 db >mongodb://127.0.0.1:27017/pache3
 
+# JWT Token Secret
+JWT_TOKEN >pache_pache_pache
 
 # 用戶密碼
 pass >7355608

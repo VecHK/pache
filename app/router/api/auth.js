@@ -1,6 +1,8 @@
 const root_dir = require('app-root-path').toString()
 const path = require('path')
 const Router = require('koa-router')
+const jwt = require('jsonwebtoken')
+const koa_jwt = require('koa-jwt')
 const crypto = require('crypto')
 const md5 = str => crypto.createHash('md5').update(str).digest('hex')
 
@@ -10,21 +12,45 @@ const RANDOM_LENGTH = 16
 module.exports = function () {
   const router = new Router
 
-  router.get('/auth/random', async (ctx, next) => {
-    ctx.session.random = randomString(RANDOM_LENGTH)
-    ctx.back(ctx.session.random)
+  // 获取登录用的 token 和 盐
+  // token 有效期 10s
+  router.get('/auth/login-info', async (ctx, next) => {
+    const login_info = {
+      salt: randomString(RANDOM_LENGTH)
+    }
+    const token = jwt.sign(login_info, envir.JWT_TOKEN, { expiresIn: '10s' })
+    ctx.back({
+      salt: login_info.salt,
+      token
+    })
   })
 
-  router.post('/auth/pass', async (ctx, next) => {
-    const true_pass = md5(ctx.session.random + envir.pass)
-    const body_pass = ctx.request.body
+  router.post('/auth/login', async (ctx, next) => {
+    const login_info = jwt.verify(ctx.request.body.token, envir.JWT_TOKEN)
 
-    ctx.session.is_login = (true_pass === body_pass)
-    ctx.back(ctx.session.is_login)
+    const true_pass = md5(login_info.salt + envir.pass)
+    const body_pass = ctx.request.body.pass
+
+    if (true_pass === body_pass) {
+      const token = jwt.sign({
+        status: true
+      }, envir.JWT_TOKEN, { expiresIn: '10m' })
+
+      ctx.back(token)
+    } else {
+      ctx.backForbidden('invalid pass')
+    }
   })
+
+  router.all('/*', koa_jwt({
+    secret: envir.JWT_TOKEN
+  }))
 
   router.get('/auth/status', async (ctx, next) => {
-    ctx.back(Boolean(ctx.session.is_login))
+    const { user } = ctx.state
+    console.log('state user', user)
+
+    ctx.back(Boolean(user.status))
   })
 
   router.get('/auth/logout', async (ctx, next) => {
@@ -32,7 +58,7 @@ module.exports = function () {
   })
 
   router.all('/*', async (ctx, next) => {
-    if (ctx.session.is_login) {
+    if (ctx.state.user.status) {
       return next()
     } else {
       return ctx.backUnauthorized('需要登录')
