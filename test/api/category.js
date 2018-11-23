@@ -15,7 +15,7 @@ test.before('准备环境', async t => {
   await clearModel()
 })
 
-async function createCategory(obj = {}) {
+async function createCategory(obj = {}, expect_status_code = 201) {
   const defaultValue = {
     name: '分类',
     position: 'left'
@@ -25,7 +25,7 @@ async function createCategory(obj = {}) {
     position: 'left'
   }, obj)
 
-  let web = await ag('post', '/api/category').testJson(new_category, 201)
+  let web = await ag('post', '/api/category').testJson(new_category, expect_status_code)
   return web.json
 }
 
@@ -38,6 +38,15 @@ test('创建分类', async t => {
   t.is(typeof data, 'object')
   t.is(data.name, '分类1')
   t.is(data.position, 'right')
+})
+
+test('不能创建重名的分类', async t => {
+  await createCategory({ name: '重名' })
+
+  const err = await createCategory({ name: '重名' }, 409)
+  t.is(typeof err, 'object')
+  t.truthy(err)
+  t.is(typeof err.message, 'string')
 })
 
 test('删除分类', async t => {
@@ -57,7 +66,19 @@ test('删除分类', async t => {
   await ag('get', `/api/category/${deleted._id}`).json(404)
 })
 
-test('分类列表', async t => {
+test.serial('分类列表(空)', async t => {
+  let web = await ag('get', '/api/categories').json(200)
+
+  let data = web.json
+  t.is(typeof data, 'object')
+  t.true(Array.isArray(data.left))
+  t.true(Array.isArray(data.right))
+
+  t.is(data.left.length, 0)
+  t.is(data.right.length, 0)
+})
+
+test.serial('分类列表', async t => {
   const left = await createCategory({
     name: '分类_left',
     position: 'left'
