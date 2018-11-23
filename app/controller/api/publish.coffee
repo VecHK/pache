@@ -1,4 +1,3 @@
-ArticleService = require '../../service/article'
 PublishService = require '../../service/publish'
 
 module.exports = new class PublishController

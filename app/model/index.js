@@ -27,19 +27,7 @@ Object.assign(model, {
     }
   },
 
-  mongoose,
-
-  async refreshContent(cb) {
-    await this.connectStatus
-
-    const all_article = await this.Article.find({})
-    for (let cursor = 0; cursor < all_article.length; ++cursor ) {
-      let article = all_article[cursor]
-      await this.Article.update({ _id: article._id }, article)
-
-      cb && cb(article, cursor, all_article)
-    }
-  },
+  mongoose
 })
 
 model.connectStatus = model.connect()

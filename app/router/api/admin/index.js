@@ -5,7 +5,6 @@ module.exports = function () {
   const routers = [
     './record',
     './publish',
-    './article',
     './category',
     // './upload-image'
   ]
