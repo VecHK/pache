@@ -41,12 +41,11 @@ module.exports = new class extends require('./service') {
 
     if (data.hasOwnProperty('name')) {
       if (category.name !== data.name) {
-        const same_name_category = await Category.findOne({ name: category.name })
+        const duplicate_name_category = await this._getByName(data.name)
         if (
-          same_name_category &&
-          same_name_category._id.toString() !== id
+          duplicate_name_category &&
+          duplicate_name_category._id.toString() !== id
         ) {
-          console.dir(same_name_category, { colors: true })
           throw this.Interrup('duplicate category name', 409)
         }
       }
