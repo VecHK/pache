@@ -9,7 +9,7 @@ const {
 
 /* 準備環境 */
 let ag = null
-test.before('準備環境', async t => {
+test.before('准备环境', async t => {
   ag = await createAdminAgent()
 
   await clearModel()
@@ -104,4 +104,18 @@ test('修改分类', async t => {
   t.is(category.name, '新名字')
   t.is(category.color, '#CCCCCC')
   t.is(category.position, 'right')
+})
+
+test('修改分类(重复分类)', async t => {
+  await createCategory({ name: 'duplicate' })
+
+  const new_category = await createCategory({ name: 'other_category' })
+  const web = await ag('patch', `/api/category/${new_category._id}`).testJson({
+    name: 'duplicate'
+  }, 409)
+
+  let err = web.json
+  t.is(typeof err, 'object')
+  t.truthy(err)
+  t.is(typeof err.message, 'string')
 })
