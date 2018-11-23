@@ -57,7 +57,19 @@ test('删除分类', async t => {
   await ag('get', `/api/category/${deleted._id}`).json(404)
 })
 
-test('分类列表', async t => {
+test.serial('分类列表(空)', async t => {
+  let web = await ag('get', '/api/categories').json(200)
+
+  let data = web.json
+  t.is(typeof data, 'object')
+  t.true(Array.isArray(data.left))
+  t.true(Array.isArray(data.right))
+
+  t.is(data.left.length, 0)
+  t.is(data.right.length, 0)
+})
+
+test.serial('分类列表', async t => {
   const left = await createCategory({
     name: '分类_left',
     position: 'left'
