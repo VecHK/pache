@@ -2,9 +2,15 @@ const envir = require('../../envir')
 const { Category } = require('../model')
 
 module.exports = new class extends require('./service') {
-  create(data) {
+  async create(data) {
     delete data._id
+
+    if (await this._getByName(data.name)) {
+      throw this.Interrup('duplicate category name', 409)
+    }
+
     const category = new Category(data)
+
     return category.save()
   }
 
