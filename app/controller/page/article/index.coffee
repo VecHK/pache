@@ -1,6 +1,6 @@
 root_dir = (require 'app-root-path').resolve
 
-service = require root_dir 'app/service/article'
+service = require root_dir 'app/service/publish'
 
 isObjectId = require root_dir 'app/lib/is-object-id'
 
