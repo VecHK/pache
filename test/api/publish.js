@@ -1,17 +1,11 @@
 require('coffeescript/register')
-
 import 'arr-ext'
-
 const test = require('ava')
 
-const crypto = require('crypto')
-const md5 = str => crypto.createHash('md5').update(str).digest('hex')
-
 const {
-  Model,
   envir,
-  JsonMiddle,
-  createAgent
+  createAdminAgent,
+  clearModel
 } = require('../_test_envirment')
 
 import _Publish from '../_publish'
@@ -20,27 +14,10 @@ let Publish
 /* 準備環境 */
 let ag = null
 test.before('準備環境', async t => {
-  ag = createAgent()
-  Publish = new _Publish(ag)
+  ag = await createAdminAgent()
+  Publish = new _Publish(ag.agent, ag.token)
 
-  // 登录
-  const random_web = await ag.get('/api/auth/random').json(200)
-  const random_code = random_web.json
-  const login_pass = md5(random_code + envir.pass)
-  let web = await ag.post('/api/auth/pass')
-    .set('Content-Type', 'application/json')
-    .send(JSON.stringify(login_pass))
-    .expect(200)
-    .expect('Content-Type', /json/)
-
-  await Model.connectStatus
-  try {
-    await Model.removeCollection('records')
-    await Model.removeCollection('publishes')
-  } catch (_) {}
-  try {
-    await Model.removeCollection('categories')
-  } catch(_) {}
+  await clearModel()
 })
 
 test('创建发布', async t => {
@@ -64,7 +41,7 @@ test('删除发布', async t => {
   t.is(publish.title, data.title)
 
   await Publish.destroy(publish._id)
-  await ag.get(`/api/publish/${publish._id}`).json(404)
+  await ag('get', `/api/publish/${publish._id}`).json(404)
 })
 
 test('获取发布', async t => {
@@ -92,7 +69,7 @@ test('获取发布列表', async t => {
     })
   ]
 
-  let web = await ag.get(`/api/publishes/1`).json(200)
+  let web = await ag('get', `/api/publishes/1`).json(200)
   let info = web.json
 
   t.is(typeof info, 'object')

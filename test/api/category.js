@@ -1,42 +1,18 @@
 require('coffeescript/register')
-
 import 'arr-ext'
-
 const test = require('ava')
 
-const crypto = require('crypto')
-const md5 = str => crypto.createHash('md5').update(str).digest('hex')
-
 const {
-  Model,
-  envir,
-  JsonMiddle,
-  createAgent
+  clearModel,
+  createAdminAgent
 } = require('../_test_envirment')
 
 /* 準備環境 */
 let ag = null
 test.before('準備環境', async t => {
-  ag = createAgent()
+  ag = await createAdminAgent()
 
-  // 登录
-  const random_web = await ag.get('/api/auth/random').json(200)
-  const random_code = random_web.json
-  const login_pass = md5(random_code + envir.pass)
-  let web = await ag.post('/api/auth/pass')
-    .set('Content-Type', 'application/json')
-    .send(JSON.stringify(login_pass))
-    .expect(200)
-    .expect('Content-Type', /json/)
-
-  await Model.connectStatus
-  try {
-    await Model.removeCollection('records')
-    await Model.removeCollection('publishes')
-  } catch (_) {}
-  try {
-    await Model.removeCollection('categories')
-  } catch(_) {}
+  await clearModel()
 })
 
 async function createCategory(obj = {}) {
@@ -49,7 +25,7 @@ async function createCategory(obj = {}) {
     position: 'left'
   }, obj)
 
-  let web = await ag.post('/api/category').testJson(new_category, 201)
+  let web = await ag('post', '/api/category').testJson(new_category, 201)
   return web.json
 }
 
@@ -65,20 +41,20 @@ test('创建分类', async t => {
 })
 
 test('删除分类', async t => {
-  let web = await ag.post('/api/category').testJson({
+  let web = await ag('post', '/api/category').testJson({
     name: '我会被删除的',
     position: 'left'
   }, 201)
 
   let created = web.json
 
-  web = await ag.delete(`/api/category/${created._id}`).json(200)
+  web = await ag('delete', `/api/category/${created._id}`).json(200)
 
   let deleted = web.json
 
   t.is(created._id, deleted._id)
 
-  await ag.get(`/api/category/${deleted._id}`).json(404)
+  await ag('get', `/api/category/${deleted._id}`).json(404)
 })
 
 test('分类列表', async t => {
@@ -91,7 +67,7 @@ test('分类列表', async t => {
     position: 'right'
   })
 
-  let web = await ag.get('/api/categories').json(200)
+  let web = await ag('get', '/api/categories').json(200)
 
   let data = web.json
 
@@ -104,7 +80,7 @@ test('分类列表', async t => {
 })
 
 async function getCategory(_id) {
-  const web = await ag.get(`/api/category/${_id}`).json(200)
+  const web = await ag('get', `/api/category/${_id}`).json(200)
   return web.json
 }
 
@@ -112,7 +88,7 @@ test('修改分类', async t => {
   const sourceValue = { name: 'source', color: '#BBBBBB' }
   const new_category = await createCategory(sourceValue)
 
-  const web = await ag.patch(`/api/category/${new_category._id}`).testJson({
+  const web = await ag('patch', `/api/category/${new_category._id}`).testJson({
     name: '新名字',
     color: '#CCCCCC',
     position: 'right'

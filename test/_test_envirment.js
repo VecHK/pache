@@ -8,6 +8,10 @@ envir.db = `mongodb://127.0.0.1:27017/${TEST_DB}`
 envir.limit = 3
 envir.pass = '測試用的哦'
 
+import _Auth from './_auth'
+
+const Model = require('../app/model')
+
 /**
   JSON 統一格式
   @param msg 消息
@@ -24,28 +28,44 @@ const JsonMiddle = (res) => {
   return res
 }
 
-supertest.Test.prototype.testJson = function (value, status = 200) {
+supertest.Test.prototype.testJson = function (value, status = 200, token) {
   value = JSON.stringify(value)
-  return this.set('Content-Type', 'application/json')
+
+  let inst = this.set('Content-Type', 'application/json')
+  if (token) {
+    inst = inst.set('Authorization', `Bearer ${token}`)
+  }
+
+  return inst
     .send(value)
     .expect(status)
     .expect('Content-Type', /json/)
     .then(JsonMiddle)
 }
 
-supertest.Test.prototype.json = function (expect_status = 200) {
-  return this.set('Content-Type', 'application/json')
+supertest.Test.prototype.json = function (expect_status = 200, token) {
+  let inst = this.set('Content-Type', 'application/json')
+  if (token) {
+    inst = inst.set('Authorization', `Bearer ${token}`)
+  }
+
+  return inst
     .expect(expect_status)
     .expect('Content-Type', /json/)
     .then(JsonMiddle)
 }
 
-supertest.Test.prototype.sendJson = function (value) {
-  if (typeof(value) === 'object') {
+supertest.Test.prototype.sendJson = function (value, token) {
+  if (value && (typeof(value) === 'object')) {
     value = JSON.stringify(value)
   }
-  return this.set('Content-Type', 'application/json')
-    .send(value)
+
+  const inst = this.set('Content-Type', 'application/json')
+  if (token) {
+    inst = inst.set('Authorization', `Bearer ${token}`)
+  }
+
+  return inst.send(value)
 }
 
 const Koa = require('koa')
@@ -58,10 +78,33 @@ function createAgent() {
   return supertest.agent(server)
 }
 
+async function createAdminAgent() {
+  const ag = supertest.agent(server)
+  const Auth = new _Auth(ag)
+  const token = await Auth.login()
+
+  const fn = (method, ...args) =>
+    ag[method](...args).set('Authorization', `Bearer ${token}`)
+
+  return Object.assign(fn, {
+    agent: ag,
+    token
+  })
+}
+
 module.exports = {
   JsonMiddle,
   envir,
-  Model: require('../app/model'),
   createAgent,
-  agent: createAgent()
+  createAdminAgent,
+  agent: createAgent(),
+  Model,
+  async clearModel() {
+    await Model.connectStatus
+    await [
+      Model.removeCollection('records'),
+      Model.removeCollection('publishes'),
+      Model.removeCollection('categories')
+    ].map(p => p.catch(() => {}))
+  }
 }
