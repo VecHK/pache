@@ -7,7 +7,7 @@ const PREFIX_URL = '/api'
 
 export default class Auth {
   async testGetLoginInfo(t) {
-    let web = await this.agent.get(PREFIX_URL + '/auth/login-info').expect(200).json(200)
+    let web = await this.agent.get(PREFIX_URL + '/auth/login-info').json(200)
     const result = web.json
 
     if (t) {
