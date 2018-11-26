@@ -48,7 +48,7 @@ test('创建记录(指定一个不存在的 publish)', async t => {
     publish_id: no_exist_publish_id,
     content: 'hehe',
     content_type: 'text'
-  }, 404)
+  }, '', 404)
 
   t.is(typeof err, 'object')
   t.is(typeof err.message, 'string')
@@ -109,4 +109,40 @@ test('记录列表', async t => {
   t.is(info.list[0].content, 'list3')
   t.is(info.list[1].content, 'list2')
   t.is(info.list[2].content, 'list1')
+})
+
+test('在被锁定的发布上添加记录', async t => {
+  let pub = await Publish.create({
+    title: 'locked'
+  })
+
+  const result = await Publish.lock(pub._id)
+  const { record_key } = result
+
+  await Record.create({
+    publish_id: pub._id,
+    content: 'list1'
+  }, '', 423)
+
+  t.falsy(
+    (await Record.getList(pub._id, 1)).list.length
+  )
+
+  await Record.create({
+    publish_id: pub._id,
+    content: 'list1'
+  }, 'failure_key', 403)
+
+  t.falsy(
+    (await Record.getList(pub._id, 1)).list.length
+  )
+
+  await Record.create({
+    publish_id: pub._id,
+    content: 'list1'
+  }, record_key)
+
+  const { list } = await Record.getList(pub._id, 1)
+  t.is(list.length, 1)
+  t.is(list[0].content, 'list1')
 })

@@ -6,17 +6,23 @@ const isNum = require('is-number')
 
 class RecordService extends require('./service') {
   // 创建文章记录
-  async create(data) {
+  async create(data, record_key) {
     delete data._id
 
     const publish = await PublishService.get(data.publish_id)
-    console.log('publish.record_lock', publish.record_lock)
+
     if (publish.record_lock) {
-      throw this.Interrup('publish is locked', 423)
-    } else {
-      const record = new Record(data)
-      return record.save()
+      // 如果发布被锁定了，则对比 record_key 是否符合发布上的 record_key
+      // 没有提供的话则返回 423，不符合则返回 403
+      if (!record_key) {
+        throw this.Interrup('publish is locked', 423)
+      } else if (record_key !== publish.record_key) {
+        throw this.Interrup('invalid record_key', 403)
+      }
     }
+
+    const record = new Record(data)
+    return record.save()
   }
 
   async destroy(id) {
