@@ -11,9 +11,9 @@ class Record
 
     return web.json
 
-  destroy: (record_id, expect_status_code = 200) ->
+  destroy: (record_id, record_key, expect_status_code = 200) ->
     web = await this.agent
-      .delete "/api/record/#{record_id}"
+      .delete "/api/record/#{record_id}?record_key=#{encodeURIComponent record_key}"
       .json expect_status_code, @token
 
     return web.json
