@@ -74,11 +74,13 @@ const extendProperties = {
         ctx.backNotFound()
       }
     }).catch(err => {
-      if (!err.is_interrup && !err.is_jwt_error) {
+      const code = err.statusCode || err.status
+
+      if ((!err.is_interrup && (code >= 500)) || !code) {
         out.error(`API got an Error: ${err.message}\n ${err.stack}`)
       }
 
-      ctx.backError(err.message, err.statusCode || 500)
+      ctx.backError(err.message, code || 500)
     })
   },
 
