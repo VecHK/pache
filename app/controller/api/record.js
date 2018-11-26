@@ -3,9 +3,9 @@ const service = require('../../service/record')
 module.exports = new class RecordController {
   // 创建文章记录
   async create(ctx) {
-    const { body } = ctx.request
+    const { data, record_key } = ctx.request.body
 
-    ctx.backCreated(await service.create(body))
+    ctx.backCreated(await service.create(data, record_key))
   }
 
   // 删除文章记录

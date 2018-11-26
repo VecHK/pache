@@ -1,12 +1,12 @@
 
 export default class Publish {
   async create(obj = {}) {
-    const new_category = Object.assign({
+    const publish = Object.assign({
       name: '发布',
       tags: []
     }, obj)
 
-    let web = await this.agent.post('/api/publish').testJson(new_category, 201, this.token)
+    let web = await this.agent.post('/api/publish').testJson(publish, 201, this.token)
     return web.json
   }
 
