@@ -5,12 +5,7 @@ const clone = require('../lib/clone')
 const isNum = require('is-number')
 
 class RecordService extends require('./service') {
-  // 创建文章记录
-  async create(data, record_key) {
-    delete data._id
-
-    const publish = await PublishService.get(data.publish_id)
-
+  validateRecordKey(publish, record_key) {
     if (publish.record_lock) {
       // 如果发布被锁定了，则对比 record_key 是否符合发布上的 record_key
       // 没有提供的话则返回 423，不符合则返回 403
@@ -20,13 +15,27 @@ class RecordService extends require('./service') {
         throw this.Interrup('invalid record_key', 403)
       }
     }
+  }
+
+  // 创建文章记录
+  async create(data, record_key) {
+    delete data._id
+
+    const publish = await PublishService.get(data.publish_id)
+    this.validateRecordKey(publish, record_key)
 
     const record = new Record(data)
     return record.save()
   }
 
-  async destroy(id) {
+  async destroy(id, record_key) {
     const record = await this.get(id)
+
+    const publish = await PublishService._get(record.publish_id)
+    if (publish) {
+      this.validateRecordKey(publish, record_key)
+    }
+
     return record.remove()
   }
 
