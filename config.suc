@@ -76,26 +76,27 @@ master_domain > 不存在的域名
 # 強制重定向到主域名
 # 開啟后，非主域名訪問的地址將會強制跳轉到主域名上
 # 開啟之前請確認 master_domain 是否填寫，否則會跳轉到莫名其妙的地方
-[force_redirect_to_master_domain] FALSE
+[FORCE_REDIRECT_TO_MASTER_DOMAIN] FALSE
 
 # 启用 HTTP/2
-[enable_http2] TRUE
+# 开启此选项后相当于启用了 https 了
+# 原先的 enable_https 不再使用
+#### 注意
+#### 此处所指的 H2 是加密的 H2，而不是 H2C(HTTP/2 Cleartext)
+[USE_H2] FALSE
 
-# 需要啟用 HTTPS 請將 enable_https 設置為 TRUE
-[enable_https] FALSE
+# HTTP/2 端口，默認為 443
+[H2_PORT] 443
 
-# HTTPS 端口，默認為 443
-[https_port] 443
-
-# 是否強制 HTTPS
-# 啟用后，以 HTTP 方式訪問 Pache 則會強制跳轉到 HTTPS 的連接上（重定向）
-[force_https] FALSE
+# 是否強制跳转到 http/2
+# 啟用后，以 HTTP 方式訪問 Pache 則會強制跳轉到 http/2 的連接上（重定向）
+[FORCE_H2] FALSE
 
 # private_key 是私钥文件的路径
-private_key >/不存在的路径/private_key.pem
+PRIVATE_KEY >/Users/vec/pache/localhost-privkey.pem
 
 # certificate 是证书文件的路径
-certificate >/不存在的路径/certificate.crt
+CERTIFICATE >/Users/vec/pache/localhost-cert.pem
 
 
 # 已格式化的 Markdown 文章是否強制轉換為 HTML 實體字符
@@ -130,7 +131,7 @@ certificate >/不存在的路径/certificate.crt
 #### 注意 CAUTION
 #### 如沒有什麼需求，請不要開啟此選項，因為 Pache 會將 ESD 列表中的
 #### 路徑作為備選靜態目錄，謹慎謹慎
-[ESD_ENABLE] TRUE
+[ESD_ENABLE] FALSE
 
 # ESD 列表
 # 靜態目錄的訪問策略是從列表的第一個目錄開始訪問，最頂層的是 Pache 路由
