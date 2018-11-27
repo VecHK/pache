@@ -75,7 +75,7 @@ test('删除记录', async t => {
   info = await Record.getList(pub._id, 1)
   t.is(info.count, info.list.length, 0)
 
-  const err = await Record.destroy(record._id, 404)
+  const err = await Record.destroy(record._id, '', 404)
   t.is(typeof err, 'object')
   t.truthy(err)
   t.is(typeof err.message, 'string')
@@ -145,4 +145,36 @@ test('在被锁定的发布上添加记录', async t => {
   const { list } = await Record.getList(pub._id, 1)
   t.is(list.length, 1)
   t.is(list[0].content, 'list1')
+})
+
+test('在被锁定的发布上删除记录', async t => {
+  let pub = await Publish.create({
+    title: 'locked——delete'
+  })
+
+  const result = await Publish.lock(pub._id)
+  const { record_key } = result
+
+  const record = await Record.create({
+    publish_id: pub._id,
+    content: 'list1'
+  }, record_key)
+
+  t.truthy(
+    (await Record.getList(pub._id, 1)).list.length
+  )
+
+  await Record.destroy(record._id, '', 423)
+  const locked_list = (await Record.getList(pub._id, 1)).list
+  t.truthy(locked_list.length)
+  t.is(locked_list[0].content, 'list1')
+
+  await Record.destroy(record._id, 'failure_key', 403)
+  const block_list = (await Record.getList(pub._id, 1)).list
+  t.truthy(block_list.length)
+  t.is(block_list[0].content, 'list1')
+
+  await Record.destroy(record._id, record_key)
+  const destroyed_list = (await Record.getList(pub._id, 1)).list
+  t.is(destroyed_list.length, 0)
 })

@@ -11,7 +11,7 @@ module.exports = new class RecordController {
   // 删除文章记录
   async destroy(ctx) {
     const { id } = ctx.params
-    ctx.back(await service.destroy(id))
+    ctx.back(await service.destroy(id, ctx.query.record_key))
   }
 
   // 获取文章记录

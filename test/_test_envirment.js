@@ -55,19 +55,6 @@ supertest.Test.prototype.json = function (expect_status = 200, token) {
     .then(JsonMiddle)
 }
 
-supertest.Test.prototype.sendJson = function (value, token) {
-  if (value && (typeof(value) === 'object')) {
-    value = JSON.stringify(value)
-  }
-
-  const inst = this.set('Content-Type', 'application/json')
-  if (token) {
-    inst = inst.set('Authorization', `Bearer ${token}`)
-  }
-
-  return inst.send(value)
-}
-
 const Koa = require('koa')
 const appRouter = require('../app/router')
 const app = new Koa
