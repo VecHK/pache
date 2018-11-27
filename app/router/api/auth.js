@@ -49,7 +49,7 @@ module.exports = function () {
     try {
       await jwt_middleware.call(this, ...arguments)
     } catch (err) {
-      throw Object.assign(err, { is_jwt_error: true })
+      throw Object.assign(err)
     }
   })
 
