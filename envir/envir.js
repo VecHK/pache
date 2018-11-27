@@ -19,11 +19,11 @@ class Envir {
     printKeyValue(jump, 'MongoDB 地址:', this.db || '(Suc 屬性不存在)')
     printKeyValue(jump, 'http 端口:', this.port || '(Suc 屬性不存在)')
 
-    printKeyValue(jump, 'https 是否启用', envir.enable_https)
-    if (envir.enable_https) {
-      printKeyValue(jump, '私钥路径', envir.private_key || '(Suc 屬性不存在)')
-      printKeyValue(jump, '证书路径', envir.certificate || '(Suc 屬性不存在)')
-      printKeyValue(jump, '是否强制 https', envir.force_https ? '是' : '否')
+    printKeyValue(jump, 'http/2 是否启用', envir.USE_H2)
+    if (envir.USE_H2) {
+      printKeyValue(jump, '私钥路径', envir.PRIVATE_KEY || '(Suc 屬性不存在)')
+      printKeyValue(jump, '证书路径', envir.CERTIFICATE || '(Suc 屬性不存在)')
+      printKeyValue(jump, '是否强制 http/2', envir.FORCE_H2 ? '是' : '否')
     }
 
     printKeyValue(jump, '密码:', this.pass.split('').fill('*').join(''))
