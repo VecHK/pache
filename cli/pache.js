@@ -5,8 +5,6 @@ const yargs = require('yargs')
 const argvPreprocess = require('./utils/pre-process')
 
 yargs
-  .usage('用法： pache [command] [option]')
-
   .command({
     command: 'view <config_path>',
     desc: '查看 Pache 配置文件信息',
@@ -51,10 +49,17 @@ yargs
 
     },
   })
+  .usage('用法： pache [command] [option]')
   .help('h')
   .alias('h', 'help')
-
-// 只输入 'pache' 的情况下，则输出 help 信息
-if (!yargs.argv._.length) {
-  yargs.parse('help')
-}
+  .command({
+    command: '*',
+    handler: argv => {
+      require('child_process').exec(`node ${__filename} help`, (err, stdout, stderr) => {
+        if (!err) {
+          console.log(stdout)
+        }
+      })
+    }
+  })
+  .argv
