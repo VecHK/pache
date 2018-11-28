@@ -115,7 +115,8 @@ class PublishService extends require './service'
     publish = await @get id
 
     record = await RecordService.get(record_id)
-    if record.publish_id is publish.record
+
+    if record.publish_id.toString() is publish._id.toString()
       publish.record = record._id
       publish.save()
     else
