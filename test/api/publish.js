@@ -175,6 +175,20 @@ test('发布文章', async t => {
   t.is(result.record, record._id)
 })
 
+test('发布文章(不存在的记录)', async t => {
+  const publish = await Publish.create({ title: 'hello, Pache' })
+  const record = await Record.create({
+    publish_id: publish._id,
+    content: 'new Article!'
+  })
+  await Record.destroy(record._id)
+  const err = await Publish.release(publish._id, record._id, '', 404)
+  t.is(typeof err, 'object')
+  t.truthy(err)
+  t.is(typeof err.message, 'string')
+  t.regex(err.message, /record/)
+})
+
 test('发布文章(不是所属发布的记录)', async t => {
   const before_publish = await Publish.create({ title: 'hello' })
   const record = await Record.create({
@@ -183,8 +197,24 @@ test('发布文章(不是所属发布的记录)', async t => {
   })
 
   const publish = await Publish.create({ title: 'hello, publish' })
-  const result = await Publish.release(publish._id, record._id, 403)
-  t.is(typeof result, 'object')
-  t.truthy(result)
-  t.is(typeof result.message, 'string')
+  const err = await Publish.release(publish._id, record._id, '', 403)
+  t.is(typeof err, 'object')
+  t.truthy(err)
+  t.is(typeof err.message, 'string')
+})
+
+test('发布文章(被锁定状态)', async t => {
+  const publish = await Publish.create({ title: 'hello, lock' })
+  const record = await Record.create({
+    publish_id: publish._id,
+    content: 'new Article!'
+  })
+  const { record_key } = await Publish.lock(publish._id)
+
+  await Publish.release(publish._id, record._id, '', 423)
+  await Publish.release(publish._id, record._id, 'failure_record_key', 403)
+  const result = await Publish.release(publish._id, record._id, record_key)
+  t.is(result._id, publish._id)
+  t.is(result.title, publish.title)
+  t.is(result.record, record._id)
 })

@@ -39,9 +39,13 @@ export default class Publish {
     return web.json
   }
 
-  async release(publish_id, record_id, expect_status_code = 200) {
-    const url = `/api/publish/${publish_id}/release/${record_id}`
-    let web = await this.agent.patch(url).json(expect_status_code, this.token)
+  async release(publish_id, record_id, record_key, expect_status_code = 200) {
+    const url = `/api/publish/${publish_id}/release`
+    let web = await this.agent.patch(url)
+      .testJson({
+        record_id,
+        record_key,
+      }, expect_status_code, this.token)
     return web.json
   }
 

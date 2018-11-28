@@ -11,6 +11,15 @@ setTimeout () ->
 randomString = require('../lib/random-string')
 
 class PublishService extends require './service'
+  validateRecordKey: (publish, record_key) ->
+    if publish.record_lock
+      # 如果发布被锁定了，则对比 record_key 是否符合发布上的 record_key
+      # 没有提供的话则返回 423，不符合则返回 403
+      unless record_key
+        throw this.Interrup 'publish is locked', 423
+      else if record_key != publish.record_key
+        throw this.Interrup 'invalid record_key', 403
+
   create: (data) ->
     publish = new Publish data
     publish.output = { _isOutput: true }
@@ -102,6 +111,7 @@ class PublishService extends require './service'
       throw @Interrup 'invalid record_key', 403
 
     Reflect.deleteProperty(data, '_id')
+    Reflect.deleteProperty(data, 'record')
 
     await Publish.updateOne(
       { _id: String(id) },
@@ -110,9 +120,11 @@ class PublishService extends require './service'
 
     @get id
 
-  release: (id, record_id) ->
+  release: (id, record_id, record_key) ->
     id = String id
     publish = await @get id
+
+    @validateRecordKey(publish, record_key)
 
     record = await RecordService.get(record_id)
 
