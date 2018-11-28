@@ -12,7 +12,7 @@ function getQuestion(config_path) {
   const envir = require(`${root_dir}/envir`)
   if (!config_path) {
     throw new Error('请输入 <config_path>')
-  } else if (fs.exists(config_path)) {
+  } else if (fs.existsSync(config_path)) {
     envir.setConfigPath(config_path)
     envir.reload()
     return constructQuestion(Object.assign({}, envir))
@@ -33,12 +33,12 @@ function fillAnswers(source_answers) {
   if (!answers.IMAGE_PATH) {
     answers.IMAGE_PATH = ''
   }
-  if (!answers.enable_https) {
+  if (!answers.USE_H2) {
     Object.assign(answers, {
-      https_port: 443,
-      private_key: '',
-      certificate: '',
-      force_https: true,
+      H2_PORT: 443,
+      PRIVATE_KEY: '',
+      CERTIFICATE: '',
+      FORCE_H2: true,
     })
   }
 

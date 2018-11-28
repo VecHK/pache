@@ -28,6 +28,8 @@ module.exports = (ctx = {}) => `# Pache 配置
 # 或者禁止外網訪問的 MongoDB 配置
 db >${ctx.db}
 
+# JWT Token Secret
+JWT_TOKEN >${ctx.JWT_TOKEN}
 
 # 用戶密碼
 pass >${ctx.pass}
@@ -69,23 +71,27 @@ master_domain >${ctx.master_domain}
 # 強制重定向到主域名
 # 開啟后，非主域名訪問的地址將會強制跳轉到主域名上
 # 開啟之前請確認 master_domain 是否填寫，否則會跳轉到莫名其妙的地方
-[force_redirect_to_master_domain] ${ctx.force_redirect_to_master_domain}
+[FORCE_REDIRECT_TO_MASTER_DOMAIN] ${ctx.FORCE_REDIRECT_TO_MASTER_DOMAIN}
 
-# 需要啟用 HTTPS 請將 enable_https 設置為 TRUE
-[enable_https] ${ctx.enable_https}
+# 启用 HTTP/2
+# 开启此选项后相当于启用了 https 了
+# 原先的 enable_https 不再使用
+#### 注意
+#### 此处所指的 H2 是加密的 H2，而不是 H2C(HTTP/2 Cleartext)
+[USE_H2] ${ctx.USE_H2}
 
-# HTTPS 端口，默認為 443
-[https_port] ${ctx.https_port}
+# HTTP/2 端口，默認為 443
+[H2_PORT] ${ctx.H2_PORT}
 
-# 是否強制 HTTPS
-# 啟用后，以 HTTP 方式訪問 Pache 則會強制跳轉到 HTTPS 的連接上（重定向）
-[force_https] ${ctx.force_https}
+# 是否強制跳转到 http/2
+# 啟用后，以 HTTP 方式訪問 Pache 則會強制跳轉到 http/2 的連接上（重定向）
+[FORCE_H2] ${ctx.FORCE_H2}
 
 # private_key 是私钥文件的路径
-private_key >${ctx.private_key}
+PRIVATE_KEY >${ctx.PRIVATE_KEY}
 
 # certificate 是证书文件的路径
-certificate >${ctx.certificate}
+CERTIFICATE >${ctx.CERTIFICATE}
 
 
 # 已格式化的 Markdown 文章是否強制轉換為 HTML 實體字符

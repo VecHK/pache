@@ -41,16 +41,16 @@ html
       pre=`Pache 版本: ${npmPackage.version}`
       pre=`HTTP 監聽端口：${envir.port}`
 
-      if envir.enable_https
-        pre=`HTTPS 監聽端口：${envir.https_port}`
-        pre=`強制重定向至 HTTPS 連接：${envir.force_https ? '是' : '否'}`
+      if envir.USE_H2
+        pre=`HTTP/2 監聽端口：${envir.H2_PORT}`
+        pre=`強制重定向至 http/2 連接：${envir.FORCE_H2 ? '是' : '否'}`
 
       pre=`單頁最大文章數：${envir.limit}`
       pre=`cluster 線程數：${envir.cluster_fork_num}`
       pre=`ESD 狀態：已${envir.ESD_ENABLE ? '啟用' : '禁用'}`
 
-      pre=`強制跳轉到主域名：${envir.force_redirect_to_master_domain ? '是' : '否'}`
-      if envir.force_redirect_to_master_domain
+      pre=`強制跳轉到主域名：${envir.FORCE_REDIRECT_TO_MASTER_DOMAIN ? '是' : '否'}`
+      if envir.FORCE_REDIRECT_TO_MASTER_DOMAIN
         pre=`主域名：${envir.master_domain}`
 
       pre=`轉載文章的顏色：'${envir.repost_color}'`

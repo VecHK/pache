@@ -7,18 +7,19 @@ const createQuestion = (name, type, assign = {}) => ({
 
 const default_question = {
   db: 'mongodb://127.0.0.1:27017/pache3',
+  // JWT_TOKEN: '',
   // pass: "",
   port: 80,
   session_secret: 'the_pache_session_secret',
   limit: 10,
   repost_color: '#46c01b',
   // master_domain: '',
-  force_redirect_to_master_domain: false,
-  enable_https: false,
-  https_port: 443,
-  force_https: true,
-  // private_key: '',
-  // certificate: '',
+  FORCE_REDIRECT_TO_MASTER_DOMAIN: false,
+  USE_H2: false,
+  H2_PORT: 443,
+  FORCE_H2: true,
+  // PRIVATE_KEY: '',
+  // CERTIFICATE: '',
   markdown_entitles: false,
   GZIP_ENABLE: true,
   PUG_CACHE: true,
@@ -32,6 +33,9 @@ module.exports = function (pre_fill = default_question) {
   const pre_questions = [
     createQuestion('db', 'input', {
       message: 'MongoDB URL',
+    }),
+    createQuestion('JWT_TOKEN', 'input', {
+      message: 'JWT TOKEN',
     }),
     createQuestion('pass', 'password', {
       mask: '*',
@@ -73,13 +77,13 @@ module.exports = function (pre_fill = default_question) {
       message: '转载文章的颜色',
     }),
 
-    createQuestion('force_redirect_to_master_domain', 'confirm', {
+    createQuestion('FORCE_REDIRECT_TO_MASTER_DOMAIN', 'confirm', {
       message: '是否强制重定向到主域名',
     }),
     createQuestion('master_domain', 'input', {
       message: '主域名',
       when: (ctx) => {
-        if (ctx.force_redirect_to_master_domain) {
+        if (ctx.FORCE_REDIRECT_TO_MASTER_DOMAIN) {
           return true
         } else {
           ctx.master_domain = ''
@@ -87,24 +91,24 @@ module.exports = function (pre_fill = default_question) {
       },
     }),
 
-    createQuestion('enable_https', 'confirm', {
-      message: '启用 HTTPS',
+    createQuestion('USE_H2', 'confirm', {
+      message: '启用 http/2',
     }),
-    createQuestion('https_port', 'input', {
-      message: 'HTTPS 端口',
-      when: ctx => ctx.enable_https,
+    createQuestion('H2_PORT', 'input', {
+      message: 'http/2 端口',
+      when: ctx => ctx.USE_H2,
     }),
-    createQuestion('private_key', 'input', {
+    createQuestion('PRIVATE_KEY', 'input', {
       message: '私钥文件路径',
-      when: ctx => ctx.enable_https,
+      when: ctx => ctx.USE_H2,
     }),
-    createQuestion('certificate', 'input', {
+    createQuestion('CERTIFICATE', 'input', {
       message: '证书文件路径',
-      when: ctx => ctx.enable_https,
+      when: ctx => ctx.USE_H2,
     }),
-    createQuestion('force_https', 'confirm', {
+    createQuestion('FORCE_H2', 'confirm', {
       message: '是否强制跳转到 HTTPS',
-      when: ctx => ctx.enable_https,
+      when: ctx => ctx.USE_H2,
     }),
 
     createQuestion('markdown_entitles', 'confirm', {
