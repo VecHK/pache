@@ -39,6 +39,12 @@ export default class Publish {
     return web.json
   }
 
+  async release(publish_id, record_id, expect_status_code = 200) {
+    const url = `/api/publish/${publish_id}/release/${record_id}`
+    let web = await this.agent.patch(url).json(expect_status_code, this.token)
+    return web.json
+  }
+
   constructor(agent, token) {
     this.agent = agent
     this.token = token
