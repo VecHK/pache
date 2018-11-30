@@ -6,9 +6,9 @@ Pache 3
 [![node version][node-image]][node-url]
 
 [travis-image]: https://travis-ci.org/VecHK/pache.svg?branch=dev
-[travis-url]: https://travis-ci.org/VecHK/Pache
-[codecov-image]: https://img.shields.io/codecov/c/github/VecHK/Pache/dev.svg
-[codecov-url]: https://codecov.io/github/VecHK/Pache?branch=dev
+[travis-url]: https://travis-ci.org/VecHK/pache
+[codecov-image]: https://img.shields.io/codecov/c/github/VecHK/pache/dev.svg
+[codecov-url]: https://codecov.io/github/VecHK/pache?branch=dev
 [node-image]: https://img.shields.io/badge/node.js-%3E=_8.12-green.svg
 [node-url]: http://nodejs.org/download/
 
@@ -24,7 +24,7 @@ yarn global add pache-blog
 
  - Redis
  - mongoDB
- - node v9.3.0
+ - node v10.13.0
 
 ## 运行
 
