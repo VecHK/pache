@@ -9,13 +9,15 @@ const {
 } = require('../_test_envirment')
 
 import _Publish from '../_publish'
-let Publish
+const _Record = require('../_record')
+let Publish, Record
 
 /* 準備環境 */
 let ag = null
 test.before('準備環境', async t => {
   ag = await createAdminAgent()
   Publish = new _Publish(ag.agent, ag.token)
+  Record = new _Record(ag.agent, ag.token)
 
   await clearModel()
 })
@@ -158,4 +160,61 @@ test('锁定发布', async t => {
   t.not(updated, null)
   t.is(updated.title, 'unlocked')
   t.is(updated.record_key, undefined)
+})
+
+test('发布文章', async t => {
+  const publish = await Publish.create({ title: 'hello, Pache' })
+  const record = await Record.create({
+    publish_id: publish._id,
+    content: 'new Article!'
+  })
+
+  const result = await Publish.release(publish._id, record._id)
+  t.is(result._id, publish._id)
+  t.is(result.title, publish.title)
+  t.is(result.record, record._id)
+})
+
+test('发布文章(不存在的记录)', async t => {
+  const publish = await Publish.create({ title: 'hello, Pache' })
+  const record = await Record.create({
+    publish_id: publish._id,
+    content: 'new Article!'
+  })
+  await Record.destroy(record._id)
+  const err = await Publish.release(publish._id, record._id, '', 404)
+  t.is(typeof err, 'object')
+  t.truthy(err)
+  t.is(typeof err.message, 'string')
+  t.regex(err.message, /record/)
+})
+
+test('发布文章(不是所属发布的记录)', async t => {
+  const before_publish = await Publish.create({ title: 'hello' })
+  const record = await Record.create({
+    publish_id: before_publish._id,
+    content: 'new Article!'
+  })
+
+  const publish = await Publish.create({ title: 'hello, publish' })
+  const err = await Publish.release(publish._id, record._id, '', 403)
+  t.is(typeof err, 'object')
+  t.truthy(err)
+  t.is(typeof err.message, 'string')
+})
+
+test('发布文章(被锁定状态)', async t => {
+  const publish = await Publish.create({ title: 'hello, lock' })
+  const record = await Record.create({
+    publish_id: publish._id,
+    content: 'new Article!'
+  })
+  const { record_key } = await Publish.lock(publish._id)
+
+  await Publish.release(publish._id, record._id, '', 423)
+  await Publish.release(publish._id, record._id, 'failure_record_key', 403)
+  const result = await Publish.release(publish._id, record._id, record_key)
+  t.is(result._id, publish._id)
+  t.is(result.title, publish.title)
+  t.is(result.record, record._id)
 })

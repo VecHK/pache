@@ -39,8 +39,14 @@ module.exports = new class PublishController
 
   # 发布文章
   release: (ctx) ->
-    { id, record_id } = ctx.params
-    ctx.back await PublishService.release id, record_id
+    {
+      params: { id },
+      request: {
+        body: { record_id, record_key }
+      }
+    } = ctx
+    
+    ctx.back await PublishService.release id, record_id, record_key
 
   # 锁定文章
   # 已锁定的文章如需延长锁定时长需要提交 record_key
