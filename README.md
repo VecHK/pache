@@ -9,7 +9,7 @@ Pache 3
 [travis-url]: https://travis-ci.org/VecHK/pache
 [codecov-image]: https://img.shields.io/codecov/c/github/VecHK/pache/dev.svg
 [codecov-url]: https://codecov.io/github/VecHK/pache?branch=dev
-[node-image]: https://img.shields.io/badge/node.js-%3E=_8.12-green.svg
+[node-image]: https://img.shields.io/badge/node.js-%3E=_10.13-green.svg
 [node-url]: http://nodejs.org/download/
 
 新版本的 Pache。
