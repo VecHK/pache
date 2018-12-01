@@ -111,7 +111,7 @@ test('记录列表', async t => {
   t.is(info.list[2].content, 'list1')
 })
 
-test('在被锁定的发布上添加记录', async t => {
+test.serial('在被锁定的发布上添加记录', async t => {
   let pub = await Publish.create({
     title: 'locked'
   })
@@ -147,7 +147,7 @@ test('在被锁定的发布上添加记录', async t => {
   t.is(list[0].content, 'list1')
 })
 
-test('在被锁定的发布上删除记录', async t => {
+test.serial('在被锁定的发布上删除记录', async t => {
   let pub = await Publish.create({
     title: 'locked——delete'
   })

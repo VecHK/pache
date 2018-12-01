@@ -137,22 +137,22 @@ class PublishService extends require './service'
   refreshRecordKey: (publish) ->
     new_record_key = randomString 32, true
     if new_record_key is publish.record_key
-      @setRecordKey publish
+      @refreshRecordKey publish
     else
       publish.record_key = new_record_key
 
   keepLockTime: (id) ->
-    publish = await @get(id)
+    publish = await @get id
 
     publish.lock_time = Date.now() + @envir.LOCK_TIMEOUT
-    @refreshRecordKey(publish)
+    @refreshRecordKey publish
 
     await publish.save()
 
     return publish.record_key
 
   clearLockTime: (id) ->
-    publish = await @get(id)
+    publish = await @get id
     publish.lock_time = Date.now() - 1
     await publish.save()
 
