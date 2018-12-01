@@ -39,6 +39,12 @@ test('创建记录', async t => {
   t.is(pub._id, record.publish_id)
   t.is(record.content, 'hehe')
   t.is(record.content_type, 'text')
+
+  const new_record = await Record.get(record._id)
+  t.is(new_record._id, record._id)
+  t.is(new_record.publish_id, record.publish_id)
+  t.is(new_record.content, record.content)
+  t.is(new_record.content_type, record.content_type)
 })
 
 test('创建记录(指定一个不存在的 publish)', async t => {
@@ -79,6 +85,11 @@ test('删除记录', async t => {
   t.is(typeof err, 'object')
   t.truthy(err)
   t.is(typeof err.message, 'string')
+
+  const get_err = await Record.get(record._id, 404)
+  t.is(typeof get_err, 'object')
+  t.truthy(get_err)
+  t.is(typeof get_err.message, 'string')
 })
 
 test('记录列表', async t => {

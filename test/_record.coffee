@@ -1,4 +1,11 @@
 class Record
+  get: (id, expect_status_code = 200) ->
+    web = await this.agent
+      .get "/api/record/#{id}"
+      .json expect_status_code, @token
+
+    web.json
+
   create: (data, record_key, expect_status_code = 201) ->
     upload = {
       data,
