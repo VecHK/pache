@@ -25,10 +25,10 @@ class Record
 
     return web.json
 
-  getList: (publish_id, page = 1) ->
+  getList: (publish_id, page = 1, expect_status_code = 200) ->
     web = await this.agent
       .get "/api/records/#{page}?publish_id=#{encodeURIComponent publish_id}"
-      .json 200, @token
+      .json expect_status_code, @token
 
     return web.json
 

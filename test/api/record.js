@@ -92,6 +92,13 @@ test('删除记录', async t => {
   t.is(typeof get_err.message, 'string')
 })
 
+test('记录列表(非法参数)', async t => {
+  const err = await Record.getList('', 1, 400)
+  t.is(typeof err, 'object')
+  t.truthy(err)
+  t.is(typeof err.message, 'string')
+})
+
 test('记录列表', async t => {
   let pub = await Publish.create({
     title: 'rPublish'
