@@ -93,7 +93,7 @@ test('删除记录', async t => {
 })
 
 test('记录列表(非法参数)', async t => {
-  const err = await Record.getList('', 1, 400)
+  const err = await Record.getList('', 1, 10, 400)
   t.is(typeof err, 'object')
   t.truthy(err)
   t.is(typeof err.message, 'string')
@@ -104,6 +104,11 @@ test('记录列表', async t => {
     title: 'rPublish'
   })
 
+  await Record.create({
+    publish_id: pub._id,
+    content: 'list0',
+    content_type: 'text'
+  })
   await Record.create({
     publish_id: pub._id,
     content: 'list1',
@@ -120,9 +125,10 @@ test('记录列表', async t => {
     content_type: 'text'
   })
 
-  const info = await Record.getList(pub._id, 1)
-  t.is(info.count, 3)
+  const info = await Record.getList(pub._id, 1, 3)
+  t.is(info.count, 4)
   t.truthy(Array.isArray(info.list))
+  t.is(info.list.length, 3)
 
   t.is(info.list[0].content, 'list3')
   t.is(info.list[1].content, 'list2')

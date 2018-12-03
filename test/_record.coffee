@@ -25,9 +25,9 @@ class Record
 
     return web.json
 
-  getList: (publish_id, page = 1, expect_status_code = 200) ->
+  getList: (publish_id, page = 1, limit = 10, expect_status_code = 200) ->
     web = await this.agent
-      .get "/api/records/#{page}?publish_id=#{encodeURIComponent publish_id}"
+      .get "/api/records/#{page}?publish_id=#{encodeURIComponent publish_id}&limit=#{encodeURIComponent(limit)}"
       .json expect_status_code, @token
 
     return web.json
