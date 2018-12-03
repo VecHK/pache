@@ -1,7 +1,7 @@
 const envir = require('../../envir')
 const { Record, Publish } = require('../model')
 const PublishService = require('./publish')
-const clone = require('../lib/clone')
+
 const isNum = require('is-number')
 
 class RecordService extends require('./service') {
