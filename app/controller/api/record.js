@@ -49,11 +49,11 @@ module.exports = new class RecordController {
   }
 
   // 更新文章记录
-  async patch(ctx) {
-    let { id } = ctx.params
-    let { body } = ctx.request
+  async update(ctx) {
+    const { id } = ctx.params
+    const { record_key, data } = ctx.request.body
 
-    const result = await service.update(id, body)
+    const result = await service.update(id, data, record_key)
 
     ctx.back(await service.get(id))
   }

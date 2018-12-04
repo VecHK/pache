@@ -202,3 +202,65 @@ test.serial('在被锁定的发布上删除记录', async t => {
   const destroyed_list = (await Record.getList(pub._id, 1)).list
   t.is(destroyed_list.length, 0)
 })
+
+test('更新不存在的记录', async t => {
+  let pub = await Publish.create({
+    title: 'ppp'
+  })
+  let record = await Record.create({
+    publish_id: pub._id,
+    content: 'will_be_update'
+  })
+
+  await Record.destroy(record._id)
+
+  const err = await Record.update(record._id, {
+    content: 'updated'
+  }, '', 404)
+  t.is(typeof err, 'object')
+  t.truthy(err)
+  t.is(typeof err.message, 'string')
+})
+
+test('更新记录', async t => {
+  let pub = await Publish.create({
+    title: 'ppp'
+  })
+  let record = await Record.create({
+    publish_id: pub._id,
+    content: 'will_be_update'
+  })
+
+  const result = await Record.update(record._id, {
+    content: 'updated'
+  })
+
+  t.is(result.content, 'updated')
+})
+
+test('更新被锁定的记录', async t => {
+  let pub = await Publish.create({
+    title: 'ppp'
+  })
+
+  let record = await Record.create({
+    publish_id: pub._id,
+    content: 'will_be_update'
+  })
+
+  const { record_key } = await Publish.lock(pub._id)
+
+  await Record.update(record._id, {
+    content: 'updated'
+  }, '', 423)
+
+  await Record.update(record._id, {
+    content: 'updated'
+  }, 'FAILURE_KEY', 403)
+
+  const result = await Record.update(record._id, {
+    content: 'updated'
+  }, record_key, 200)
+
+  t.is(result.content, 'updated')
+})

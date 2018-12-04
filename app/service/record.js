@@ -85,6 +85,19 @@ class RecordService extends require('./service') {
   getRecordsByPublishId(publish_id) {
     return Record.find({ publish_id })
   }
+
+  async update(id, data, record_key) {
+    const record = await this.get(id)
+
+    const publish = await PublishService._get(record.publish_id)
+    if (publish) {
+      this.validateRecordKey(publish, record_key)
+    }
+
+    delete data._id
+    delete data.publish_id
+    return Object.assign(record, data).save()
+  }
 }
 
 module.exports = new RecordService
