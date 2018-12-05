@@ -12,6 +12,8 @@ Object.assign model,
 
   Publish: require('./publish') && mongoose.model('Publish')
 
+  Music: require('./music') && mongoose.model('Music')
+
   mongoose
 
   connect: () ->
