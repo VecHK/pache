@@ -218,3 +218,50 @@ test('发布文章(被锁定状态)', async t => {
   t.is(result.title, publish.title)
   t.is(result.record, record._id)
 })
+
+test('更新多篇发布(其中有被锁定的)', async t => {
+  const p1 = await Publish.create({ title: 'multi publish 1' })
+  const p2 = await Publish.create({ title: 'multi publish 2' })
+  const p3 = await Publish.create({ title: 'multi publish 3 locked' })
+
+  await Publish.lock(p3._id)
+
+  const ids = [p1._id, p2._id, p3._id]
+
+  const result = await Publish.updateMulti(
+    ids,
+    { data: { title: 'multi updated' } }
+  )
+
+  t.truthy(Array.isArray(result))
+
+  t.is(result.length, ids.length)
+  t.is(result[0].title, 'multi updated')
+  t.is(result[0]._id, p1._id)
+  t.is(result[1].title, 'multi updated')
+  t.is(result[1]._id, p2._id)
+  t.is(result[2].__is_error, true)
+  t.is(typeof result[2].message, 'string')
+})
+
+test('更新多篇发布', async t => {
+  const p1 = await Publish.create({ title: 'multi publish 1' })
+  const p2 = await Publish.create({ title: 'multi publish 2' })
+  const p3 = await Publish.create({ title: 'multi publish 3' })
+  const ids = [p1._id, p2._id, p3._id]
+
+  const result = await Publish.updateMulti(
+    ids,
+    { data: { title: 'multi updated' } }
+  )
+
+  t.truthy(Array.isArray(result))
+
+  t.is(result.length, ids.length)
+  t.is(result[0].title, 'multi updated')
+  t.is(result[0]._id, p1._id)
+  t.is(result[1].title, 'multi updated')
+  t.is(result[1]._id, p2._id)
+  t.is(result[2].title, 'multi updated')
+  t.is(result[2]._id, p3._id)
+})

@@ -37,6 +37,17 @@ module.exports = new class PublishController
     { params: { id }, request: { body } } = ctx
     ctx.back await PublishService.update id, body.data, body.record_key
 
+  updateMulti: (ctx) ->
+    { ids, data } = ctx.request.body
+    result = []
+    for id in ids
+      try
+        result.push await PublishService.update id, data
+      catch err
+        result.push Object.assign { message: err.message, __is_error: true }, err
+
+    ctx.back result
+
   # 发布文章
   release: (ctx) ->
     {
@@ -45,7 +56,7 @@ module.exports = new class PublishController
         body: { record_id, record_key }
       }
     } = ctx
-    
+
     ctx.back await PublishService.release id, record_id, record_key
 
   # 锁定文章
