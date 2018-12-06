@@ -4,7 +4,7 @@ const { Music } = require('../model');
 module.exports = new class extends require('./service') {
     async creat(data) {
         delete data._id;
-        
+
         const music = new Music(data);
 
         return music.save();
