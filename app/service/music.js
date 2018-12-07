@@ -2,7 +2,7 @@ const envir = require('../../envir');
 const { Music } = require('../model');
 
 module.exports = new class extends require('./service') {
-    async creat(data) {
+    async create(data) {
         delete data._id;
 
         const music = new Music(data);
@@ -30,7 +30,6 @@ module.exports = new class extends require('./service') {
     }
 
     async update(id,data) {
-        const music = await this.get(id);
         delete data._id;
         return Music.updateOne(
             { music_id:_id},
