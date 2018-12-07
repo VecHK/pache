@@ -6,13 +6,15 @@ model = new EventEmitter
 module.exports = model
 
 Object.assign model,
-  Category: require('./category') && mongoose.model('Category')
+  Category: require('./category')
 
-  Record: require('./record') && mongoose.model('Record')
+  Record: require('./record')
 
-  Publish: require('./publish') && mongoose.model('Publish')
+  Publish: require('./publish')
 
-  Music: require('./music') && mongoose.model('Music')
+  Music: require('./music')
+
+  Playlist: require('./playlist')
 
   mongoose
 
