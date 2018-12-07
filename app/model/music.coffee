@@ -23,6 +23,4 @@ MusicSchema = new Schema
     type: Date
     default: Date.now
 
-mongoose.model 'Music', MusicSchema
-
-module.exports = MusicSchema
+module.exports =  mongoose.model 'Music', MusicSchema
