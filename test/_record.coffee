@@ -1,11 +1,4 @@
 class Record
-  get: (id, expect_status_code = 200) ->
-    web = await this.agent
-      .get "/api/record/#{id}"
-      .json expect_status_code, @token
-
-    web.json
-
   create: (data, record_key, expect_status_code = 201) ->
     upload = {
       data,
@@ -25,10 +18,24 @@ class Record
 
     return web.json
 
-  getList: (publish_id, page = 1) ->
+  get: (id, expect_status_code = 200) ->
     web = await this.agent
-      .get "/api/records/#{page}?publish_id=#{encodeURIComponent publish_id}"
-      .json 200, @token
+      .get "/api/record/#{id}"
+      .json expect_status_code, @token
+
+    web.json
+
+  getList: (publish_id, page = 1, limit = 10, expect_status_code = 200) ->
+    web = await this.agent
+      .get "/api/records/#{page}?publish_id=#{encodeURIComponent publish_id}&limit=#{encodeURIComponent(limit)}"
+      .json expect_status_code, @token
+
+    return web.json
+
+  update: (publish_id, data, record_key, expect_status_code = 200) ->
+    web = await this.agent
+      .put "/api/record/#{publish_id}"
+      .testJson { data, record_key }, expect_status_code, @token
 
     return web.json
 

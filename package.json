@@ -19,7 +19,8 @@
     ],
     "source": [
       "**/*.{js,json,coffee}"
-    ]
+    ],
+    "serial": true
   },
   "keywords": [
     "blog"

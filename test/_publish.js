@@ -28,6 +28,15 @@ export default class Publish {
     return web.json
   }
 
+  async updateMulti(ids, body, expect_status_code = 200) {
+    let web = await this.agent.put(`/api/publishes`).testJson({
+      ids,
+      data: body.data,
+      record_key: body.record_key
+    }, expect_status_code, this.token)
+    return web.json
+  }
+
   async lock(id) {
     let web = await this.agent.lock(`/api/publish/${id}`).json(200, this.token)
     return web.json

@@ -41,3 +41,4 @@ module.exports = (router, path, ...middlewares) ->
   router
     .get "#{pluralized}", fillPage, ...middlewares, detectController 'getList'
     .get "#{pluralized}/:page", ...middlewares, detectController 'getList'
+    .put "#{pluralized}", ...middlewares, detectController 'updateMulti'

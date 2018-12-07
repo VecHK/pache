@@ -1,7 +1,7 @@
 const envir = require('../../envir')
 const { Record, Publish } = require('../model')
 const PublishService = require('./publish')
-const clone = require('../lib/clone')
+
 const isNum = require('is-number')
 
 class RecordService extends require('./service') {
@@ -84,6 +84,19 @@ class RecordService extends require('./service') {
 
   getRecordsByPublishId(publish_id) {
     return Record.find({ publish_id })
+  }
+
+  async update(id, data, record_key) {
+    const record = await this.get(id)
+
+    const publish = await PublishService._get(record.publish_id)
+    if (publish) {
+      this.validateRecordKey(publish, record_key)
+    }
+
+    delete data._id
+    delete data.publish_id
+    return Object.assign(record, data).save()
   }
 }
 
