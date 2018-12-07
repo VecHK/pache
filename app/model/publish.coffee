@@ -83,4 +83,4 @@ PublishSchema.virtual 'record_lock'
   .get () ->
     this.lock_time.valueOf() >= Date.now()
 
-mongoose.model 'Publish', PublishSchema
+module.exports = mongoose.model 'Publish', PublishSchema

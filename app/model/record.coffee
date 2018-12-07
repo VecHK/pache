@@ -30,4 +30,4 @@ RecordSchema = new Schema
     type: Date
     default: Date.now
 
-mongoose.model 'Record', RecordSchema
+module.exports = mongoose.model 'Record', RecordSchema

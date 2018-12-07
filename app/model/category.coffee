@@ -43,6 +43,7 @@ cateUtils =
   checkName: (name) ->
     name == null || typeof(name.toString) != 'function'
 
+CategoryModel = Mongoose.model 'Category', CategorySchema
 
 CategorySchema.pre 'save', () ->
   topic = await CategoryModel.findOne().sort({ sort: -1 })
@@ -52,7 +53,4 @@ CategorySchema.pre 'save', () ->
   else
     @sort = topic.sort + 1;
 
-
-CategoryModel = Mongoose.model 'Category', CategorySchema
-
-module.exports = CategorySchema
+module.exports = CategoryModel
