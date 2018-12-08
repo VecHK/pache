@@ -32,7 +32,7 @@ module.exports = new class extends require('./service') {
     async update(id,data) {
         delete data._id;
         return Music.updateOne(
-            { music_id:_id},
+            { music_id:id},
             { $set:data}
         )
     }
