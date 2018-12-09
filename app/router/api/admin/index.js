@@ -6,6 +6,8 @@ module.exports = function () {
     './record',
     './publish',
     './category',
+    './music',
+    './playlist',
     // './upload-image'
   ]
 
