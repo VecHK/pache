@@ -8,7 +8,8 @@ module.exports = function () {
     './category',
     './music',
     './playlist',
-    // './upload-image'
+    // './upload-image',
+    // './upload-audio'
   ]
 
   for (let module_path of routers) {
