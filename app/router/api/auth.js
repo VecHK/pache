@@ -12,23 +12,8 @@ const RANDOM_LENGTH = 16
 module.exports = function () {
   const router = new Router
 
-  // 获取登录用的 token 和 盐
-  // token 有效期 10s
-  router.get('/auth/login-info', async (ctx, next) => {
-    const login_info = {
-      salt: randomString(RANDOM_LENGTH)
-    }
-    const token = jwt.sign(login_info, envir.JWT_TOKEN, { expiresIn: '10s' })
-    ctx.back({
-      salt: login_info.salt,
-      token
-    })
-  })
-
   router.post('/auth/login', async (ctx, next) => {
-    const login_info = jwt.verify(ctx.request.body.token, envir.JWT_TOKEN)
-
-    const true_pass = md5(login_info.salt + envir.pass)
+    const true_pass = md5(envir.pass)
     const body_pass = ctx.request.body.pass
 
     if (true_pass === body_pass) {
