@@ -29,7 +29,7 @@
 db >mongodb://127.0.0.1:27017/pache3
 
 # JWT Token Secret
-JWT_TOKEN >pache_pache_pache
+JWT_TOKEN_SECRET >pache_pache_pache
 
 # 用戶密碼
 pass >7355608

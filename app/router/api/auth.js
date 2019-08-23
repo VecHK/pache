@@ -19,7 +19,7 @@ module.exports = function () {
     if (true_pass === body_pass) {
       const token = jwt.sign({
         status: true
-      }, envir.JWT_TOKEN, { expiresIn: '10m' })
+      }, envir.JWT_TOKEN_SECRET, { expiresIn: '10m' })
 
       ctx.back(token)
     } else {
@@ -27,12 +27,12 @@ module.exports = function () {
     }
   })
 
-  const jwt_middleware = koa_jwt({
-    secret: envir.JWT_TOKEN
+  const jwtMiddleware = koa_jwt({
+    secret: envir.JWT_TOKEN_SECRET
   })
   router.all('/*', async function () {
     try {
-      await jwt_middleware.call(this, ...arguments)
+      await jwtMiddleware.call(this, ...arguments)
     } catch (err) {
       throw Object.assign(err)
     }
@@ -44,6 +44,10 @@ module.exports = function () {
     } else {
       return ctx.backUnauthorized('需要登录')
     }
+  })
+
+  router.get('/auth/test', async (ctx, next) => {
+    ctx.back('test')
   })
 
   return router

@@ -34,8 +34,8 @@ module.exports = function (pre_fill = default_question) {
     createQuestion('db', 'input', {
       message: 'MongoDB URL',
     }),
-    createQuestion('JWT_TOKEN', 'input', {
-      message: 'JWT TOKEN',
+    createQuestion('JWT_TOKEN_SECRET', 'input', {
+      message: 'JWT TOKEN Secret',
     }),
     createQuestion('pass', 'password', {
       mask: '*',

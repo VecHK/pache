@@ -29,7 +29,7 @@ module.exports = (ctx = {}) => `# Pache 配置
 db >${ctx.db}
 
 # JWT Token Secret
-JWT_TOKEN >${ctx.JWT_TOKEN}
+JWT_TOKEN_SECRET >${ctx.JWT_TOKEN_SECRET}
 
 # 用戶密碼
 pass >${ctx.pass}
