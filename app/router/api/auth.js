@@ -12,29 +12,14 @@ const RANDOM_LENGTH = 16
 module.exports = function () {
   const router = new Router
 
-  // 获取登录用的 token 和 盐
-  // token 有效期 10s
-  router.get('/auth/login-info', async (ctx, next) => {
-    const login_info = {
-      salt: randomString(RANDOM_LENGTH)
-    }
-    const token = jwt.sign(login_info, envir.JWT_TOKEN, { expiresIn: '10s' })
-    ctx.back({
-      salt: login_info.salt,
-      token
-    })
-  })
-
   router.post('/auth/login', async (ctx, next) => {
-    const login_info = jwt.verify(ctx.request.body.token, envir.JWT_TOKEN)
-
-    const true_pass = md5(login_info.salt + envir.pass)
+    const true_pass = md5(envir.pass)
     const body_pass = ctx.request.body.pass
 
     if (true_pass === body_pass) {
       const token = jwt.sign({
         status: true
-      }, envir.JWT_TOKEN, { expiresIn: '10m' })
+      }, envir.JWT_TOKEN_SECRET, { expiresIn: '10m' })
 
       ctx.back(token)
     } else {
@@ -42,12 +27,12 @@ module.exports = function () {
     }
   })
 
-  const jwt_middleware = koa_jwt({
-    secret: envir.JWT_TOKEN
+  const jwtMiddleware = koa_jwt({
+    secret: envir.JWT_TOKEN_SECRET
   })
   router.all('/*', async function () {
     try {
-      await jwt_middleware.call(this, ...arguments)
+      await jwtMiddleware.call(this, ...arguments)
     } catch (err) {
       throw Object.assign(err)
     }
@@ -59,6 +44,10 @@ module.exports = function () {
     } else {
       return ctx.backUnauthorized('需要登录')
     }
+  })
+
+  router.get('/auth/test', async (ctx, next) => {
+    ctx.back('test')
   })
 
   return router

@@ -6,31 +6,16 @@ const envir = require('../envir')
 const PREFIX_URL = '/api'
 
 export default class Auth {
-  async testGetLoginInfo(t) {
-    let web = await this.agent.get(PREFIX_URL + '/auth/login-info').json(200)
-    const result = web.json
-
-    if (t) {
-      t.is(typeof result, 'object')
-      t.is(typeof result.salt, 'string')
-      t.is(typeof result.token, 'string')
-    }
-
-    return result
-  }
-
-  async adminLogin(login_token, salt, pass, expect_status = 200) {
+  async adminLogin(pass, expect_status = 200) {
     let web = await this.agent.post(PREFIX_URL + '/auth/login').testJson({
-      pass: md5(`${salt}${pass}`),
-      token: login_token
+      pass: md5(`${pass}`)
     }, expect_status)
 
     return web.json
   }
 
-  async login(pass = envir.pass, t) {
-    let login_info = await this.testGetLoginInfo(t)
-    return this.adminLogin(login_info.token, login_info.salt, pass)
+  async login(pass = envir.pass) {
+    return this.adminLogin(pass)
   }
 
   constructor(ag) {
